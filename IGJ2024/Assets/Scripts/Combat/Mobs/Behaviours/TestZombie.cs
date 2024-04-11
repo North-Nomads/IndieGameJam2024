@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 public class TestZombie : MobBehaviour
@@ -9,6 +10,18 @@ public class TestZombie : MobBehaviour
     private float distance;
 
     public bool IsGrounded => Physics2D.OverlapCircle(SpriteBottom, GroundCheckRadius, GroundLayer);
+
+    public override void GetHit(float damage)
+    {
+        CurrentHealth -= damage;
+        if (CurrentHealth < 0)
+            HandleDeath();
+    }
+
+    protected override void HandleDeath()
+    {
+        Destroy(gameObject);
+    }
 
     private void FixedUpdate()
     {

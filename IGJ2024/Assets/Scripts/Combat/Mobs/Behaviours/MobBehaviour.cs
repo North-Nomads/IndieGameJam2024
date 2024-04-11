@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 /// <summary>
@@ -16,11 +17,20 @@ public abstract class MobBehaviour : MonoBehaviour
     protected Rigidbody2D Rigidbody { get => _rigidbody; }
     protected MobParameters Mob { get => mob; }
     protected Vector3 SpriteBottom => transform.position - new Vector3(0, _spriteRenderer.bounds.size.y / 2, 0);
+    protected float MaxHealth { get; private set; }
+    protected float CurrentHealth { get; set; }
+
+    public abstract void GetHit(float damage);
+
+    protected abstract void HandleDeath();
 
     private void Start()
     {
         _animator = GetComponent<Animator>();
         _rigidbody = GetComponent<Rigidbody2D>();
-        _spriteRenderer = GetComponent<SpriteRenderer>();    
+        _spriteRenderer = GetComponent<SpriteRenderer>();
+        
+        MaxHealth = Mob.HealthPoints;
+        CurrentHealth = MaxHealth;
     }
 }

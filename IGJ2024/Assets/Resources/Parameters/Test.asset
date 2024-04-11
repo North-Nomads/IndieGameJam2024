@@ -15,7 +15,7 @@ MonoBehaviour:
   healthPoints: 5
   seekSpeed: 5
   seekRadius: 5
-  attackRadius: 1
+  attackRadius: 2
   attackDelay: 5
   attackAnimationHitDelay: 5
   attackDamage: 5

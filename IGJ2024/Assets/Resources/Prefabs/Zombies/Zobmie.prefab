@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 8142084450270265233}
   - component: {fileID: 970101048129934997}
   - component: {fileID: 1916443105583213325}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Zobmie
   m_TagString: Untagged
   m_Icon: {fileID: 0}
