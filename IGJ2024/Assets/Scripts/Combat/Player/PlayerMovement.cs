@@ -13,14 +13,7 @@ public class PlayerMovement : MonoBehaviour
 
     public void Update()
     {
-        // Нормально переписать, debug only
-        if (Input.GetKey(KeyCode.A))
-        {
-            _rigidbody.MovePosition(_rigidbody.position + moveSpeed * Time.fixedDeltaTime * Vector2.left);
-        }
-        else if (Input.GetKey(KeyCode.D))
-        {
-            _rigidbody.MovePosition(_rigidbody.position + moveSpeed * Time.fixedDeltaTime * Vector2.right);
-        }
+        var horizontal = Input.GetAxis("Horizontal");
+        _rigidbody.MovePosition(_rigidbody.position + horizontal * moveSpeed * Time.fixedDeltaTime * Vector2.right);
     }
 }
