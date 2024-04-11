@@ -9,7 +9,6 @@ public abstract class MobBehaviour : MonoBehaviour
     [SerializeField] private MobParameters mob;
     private Animator _animator;
 
-
     public GameObject PlayerInstance { get; internal set; }
     public Animator Animator { get => _animator; }
 

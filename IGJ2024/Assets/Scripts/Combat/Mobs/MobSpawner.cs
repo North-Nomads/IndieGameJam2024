@@ -7,7 +7,6 @@ using UnityEngine;
 public class MobSpawner : MonoBehaviour
 {
     [SerializeField] private GameObject player;
-    [SerializeField] private MobSpawnPoint[] mobSpawnPoints;
 
     public event EventHandler<GameObject> OnPlayerLoaded = delegate { };
 
