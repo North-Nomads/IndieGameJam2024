@@ -42,3 +42,12 @@ TagManager:
   - name: Default
     uniqueID: 0
     locked: 0
+  - name: Background
+    uniqueID: 2889815279
+    locked: 0
+  - name: Game
+    uniqueID: 832807785
+    locked: 0
+  - name: Actors
+    uniqueID: 1454484661
+    locked: 0
