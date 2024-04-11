@@ -26,7 +26,7 @@ public class PlayerCombat : MonoBehaviour, IHittable
 
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Space))
+        if (Input.GetMouseButtonDown(0))
         {
             PerformAttack();
         }

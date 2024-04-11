@@ -11,7 +11,7 @@ public class PlayerMovement : MonoBehaviour
         _rigidbody = GetComponent<Rigidbody2D>();
     }
 
-    public void Update()
+    public void FixedUpdate()
     {
         var horizontal = Input.GetAxis("Horizontal");
         _rigidbody.MovePosition(_rigidbody.position + horizontal * moveSpeed * Time.fixedDeltaTime * Vector2.right);
