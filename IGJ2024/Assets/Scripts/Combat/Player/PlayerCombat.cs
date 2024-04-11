@@ -1,9 +1,29 @@
 ﻿using UnityEngine;
 
-public class PlayerCombat : MonoBehaviour
+public class PlayerCombat : MonoBehaviour, IHittable
 {
     [SerializeField, Min(0)] private float debugDamage = 1f;
+    [SerializeField, Min(0)] private float maximumHealth;
+
     private const int EnemyLayer = 7;
+
+    private float _currentHealth;
+    public float CurrentHealth
+    {
+        get => _currentHealth;
+        private set
+        {
+            Debug.Log($"{_currentHealth} -> {value}");
+            _currentHealth = value;
+            if (_currentHealth <= 0)
+                HandleDeath();
+        }
+    }
+
+    private void Start()
+    {
+        CurrentHealth = maximumHealth;
+    }
 
     private void Update()
     {
@@ -20,5 +40,15 @@ public class PlayerCombat : MonoBehaviour
         {
             collision.GetComponent<MobBehaviour>().GetHit(debugDamage);
         }
+    }
+
+    public void GetHit(float damage)
+    {
+        CurrentHealth -= damage;
+    }   
+
+    public void HandleDeath()
+    {
+        Debug.Log("Player is dead");
     }
 }

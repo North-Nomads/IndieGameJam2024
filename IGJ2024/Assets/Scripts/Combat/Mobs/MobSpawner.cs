@@ -6,11 +6,11 @@ using UnityEngine;
 /// </summary>
 public class MobSpawner
 {
-    public readonly Transform Player;
+    public readonly PlayerCombat Player;
 
-    public event EventHandler<Transform> OnSpawnerLoaded = delegate { };
+    public event EventHandler<PlayerCombat> OnSpawnerLoaded = delegate { };
 
-    public MobSpawner(Transform player, MobSpawnPoint[] spawnPoints)
+    public MobSpawner(PlayerCombat player, MobSpawnPoint[] spawnPoints)
     {
         Player = player;
         foreach (var spawnPoint in spawnPoints)

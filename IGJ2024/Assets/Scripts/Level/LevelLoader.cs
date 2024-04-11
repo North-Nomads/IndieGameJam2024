@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class LevelLoader : MonoBehaviour
 {
-    private PlayerMovement player;
+    private PlayerCombat player;
 
     private void Start()
     {
@@ -13,12 +13,12 @@ public class LevelLoader : MonoBehaviour
     private void SpawnMobs()
     {
         var spawnPoints = FindObjectsOfType<MobSpawnPoint>();
-        var mobSpawner = new MobSpawner(player.transform, spawnPoints);
+        var mobSpawner = new MobSpawner(player, spawnPoints);
     }
 
     private void SpawnPlayer()
     {
-        var playerPrefab = Resources.Load<PlayerMovement>("Prefabs/Player/Player");
+        var playerPrefab = Resources.Load<PlayerCombat>("Prefabs/Player/Player");
         var playerSpawnPoint = GameObject.FindGameObjectWithTag("Player Spawn").transform.position;
         player = Instantiate(playerPrefab, playerSpawnPoint, Quaternion.identity);
     }

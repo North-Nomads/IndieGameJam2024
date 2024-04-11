@@ -11,8 +11,8 @@ public class MobParameters : ScriptableObject
 
     [Header("Combat")]
     [SerializeField, Min(0)] private float attackRadius;
-    [SerializeField, Min(0)] private float attackDelay;
-    [SerializeField, Min(0)] private float attackAnimationHitDelay;
+    [SerializeField, Min(0)] private float attackCooldown;
+    [SerializeField, Min(0)] private float attackAnimationDelay;
     [SerializeField, Min(0)] private float attackDamage;
     [SerializeField, Min(0)] private float chaseSpeedSpeed;
 
@@ -39,12 +39,12 @@ public class MobParameters : ScriptableObject
     /// <summary>
     /// Delay in seconds between two attacks
     /// </summary>
-    public float AttackDelay { get => attackDelay; set => attackDelay = value; }
+    public float AttackCooldown { get => attackCooldown; set => attackCooldown = value; }
 
     /// <summary>
     /// A delay in seconds after which the damage will be applied
     /// </summary>
-    public float AttackAnimationHitDelay { get => attackAnimationHitDelay; set => attackAnimationHitDelay = value; }
+    public float AttackAnimationDelay { get => attackAnimationDelay; set => attackAnimationDelay = value; }
     
     /// <summary>
     /// Damage mob deals to the player

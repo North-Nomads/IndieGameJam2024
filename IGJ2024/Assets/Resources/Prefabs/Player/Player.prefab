@@ -114,6 +114,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   debugDamage: 1
+  maximumHealth: 10
 --- !u!50 &2288370284125223207
 Rigidbody2D:
   serializedVersion: 4

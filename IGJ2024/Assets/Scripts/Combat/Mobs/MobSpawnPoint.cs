@@ -10,10 +10,9 @@ public class MobSpawnPoint : MonoBehaviour
 
     public void LinkMobSpawner(MobSpawner spawner) => spawner.OnSpawnerLoaded += SpawnMob;
 
-    private void SpawnMob(object sender, Transform e)
+    private void SpawnMob(object sender, PlayerCombat e)
     {
         var mob = Instantiate(mobToSpawn, transform.position, Quaternion.identity);
         mob.PlayerInstance = e;
-
     }
 }
