@@ -15,44 +15,49 @@ public class MobParameters : ScriptableObject
     [SerializeField, Min(0)] private float attackAnimationDelay;
     [SerializeField, Min(0)] private float attackDamage;
     [SerializeField, Min(0)] private float chaseSpeedSpeed;
+    [SerializeField, Min(0)] private float hitKnockbackStrength;
+
 
     /// <summary>
     /// Mob health points
     /// </summary>
-    public float HealthPoints { get => healthPoints; set => healthPoints = value; }
+    public float HealthPoints => healthPoints;
 
     /// <summary>
     /// Mob speed during roaming
     /// </summary>
-    public float SeekSpeed { get => seekSpeed; set => seekSpeed = value; }
-
-    /// <summary>
+    public float SeekSpeed => seekSpeed;  /// <summary>
     /// Mob range within which he starts chasing player
     /// </summary>
-    public float SeekRadius { get => seekRadius; set => seekRadius = value; }
+    public float SeekRadius => seekRadius;
 
     /// <summary>
     /// Mob range within which he starts performing attack
     /// </summary>
-    public float AttackRadius { get => attackRadius; set => attackRadius = value; }
+    public float AttackRadius => attackRadius;
 
     /// <summary>
     /// Delay in seconds between two attacks
     /// </summary>
-    public float AttackCooldown { get => attackCooldown; set => attackCooldown = value; }
+    public float AttackCooldown => attackCooldown;
 
     /// <summary>
     /// A delay in seconds after which the damage will be applied
     /// </summary>
-    public float AttackAnimationDelay { get => attackAnimationDelay; set => attackAnimationDelay = value; }
+    public float AttackAnimationDelay => attackAnimationDelay;
     
     /// <summary>
     /// Damage mob deals to the player
     /// </summary>
-    public float AttackDamage { get => attackDamage; set => attackDamage = value; }
+    public float AttackDamage => attackDamage;
 
     /// <summary>
     /// Mob speed during chasing player status
     /// </summary>
-    public float ChaseSpeedSpeed { get => chaseSpeedSpeed; set => chaseSpeedSpeed = value; }
+    public float ChaseSpeedSpeed => chaseSpeedSpeed;
+
+    /// <summary>
+    /// Stength will be applied on enemy gets hit
+    /// </summary>
+    public float HitKnockbackStrength => hitKnockbackStrength;
 }

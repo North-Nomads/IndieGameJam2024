@@ -30,7 +30,11 @@ public class TestZombie : MobBehaviour
         ResetAttackCooldown();
     }
 
-    public override void GetHit(float damage) => CurrentHealth -= damage;
+    public override void GetHit(float damage)
+    {
+        CurrentHealth -= damage;
+        Rigidbody.MovePosition(Rigidbody.position + Mob.HitKnockbackStrength * Time.fixedDeltaTime * -_directionTowardsPlayer);
+    }
 
     public override void HandleDeath() => Destroy(gameObject);
 

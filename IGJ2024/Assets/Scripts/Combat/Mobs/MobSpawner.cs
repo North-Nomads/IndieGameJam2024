@@ -1,5 +1,4 @@
 ﻿using System;
-using UnityEngine;
 
 /// <summary>
 /// Mob spawner class is responsible for instantiating mobs on level. Single entity per scene

@@ -13,7 +13,6 @@ public class PlayerCombat : MonoBehaviour, IHittable
         get => _currentHealth;
         private set
         {
-            Debug.Log($"{_currentHealth} -> {value}");
             _currentHealth = value;
             if (_currentHealth <= 0)
                 HandleDeath();

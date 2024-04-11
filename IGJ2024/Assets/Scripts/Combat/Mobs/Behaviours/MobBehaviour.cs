@@ -8,6 +8,7 @@ using UnityEngine;
 public abstract class MobBehaviour : MonoBehaviour, IHittable
 {
     [SerializeField] private MobParameters mob;
+
     private Animator _animator;
     private Rigidbody2D _rigidbody;
     private SpriteRenderer _spriteRenderer;

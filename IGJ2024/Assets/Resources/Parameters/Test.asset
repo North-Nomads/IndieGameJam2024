@@ -20,3 +20,4 @@ MonoBehaviour:
   attackAnimationDelay: 0
   attackDamage: 2
   chaseSpeedSpeed: 5
+  hitKnockbackStrength: 5
