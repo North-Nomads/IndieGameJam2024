@@ -13,6 +13,7 @@ public class TestZombie : MobBehaviour
 
     public override void GetHit(float damage)
     {
+        print($"{CurrentHealth}, {damage}");
         CurrentHealth -= damage;
         if (CurrentHealth < 0)
             HandleDeath();
