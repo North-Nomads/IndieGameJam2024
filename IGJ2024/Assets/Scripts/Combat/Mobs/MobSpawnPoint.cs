@@ -15,7 +15,7 @@ public class MobSpawnPoint : MonoBehaviour
         _spawner.OnPlayerLoaded += SpawnMob;
     }
 
-    private void SpawnMob(object sender, GameObject e)
+    private void SpawnMob(object sender, Transform e)
     {
         var mob = Instantiate(mobToSpawn, transform.position, Quaternion.identity);
         mob.PlayerInstance = e;

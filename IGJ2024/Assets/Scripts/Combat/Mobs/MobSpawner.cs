@@ -6,9 +6,9 @@ using UnityEngine;
 /// </summary>
 public class MobSpawner : MonoBehaviour
 {
-    [SerializeField] private GameObject player;
+    [SerializeField] private Transform player;
 
-    public event EventHandler<GameObject> OnPlayerLoaded = delegate { };
+    public event EventHandler<Transform> OnPlayerLoaded = delegate { };
 
     private void Start()
     {
