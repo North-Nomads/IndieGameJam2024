@@ -7,13 +7,8 @@ using UnityEngine;
 public class MobSpawnPoint : MonoBehaviour
 {
     [SerializeField] private MobBehaviour mobToSpawn;
-    private MobSpawner _spawner;
 
-    private void Start()
-    {
-        _spawner = FindObjectOfType<MobSpawner>(); // rewrite smh
-        _spawner.OnPlayerLoaded += SpawnMob;
-    }
+    public void LinkMobSpawner(MobSpawner spawner) => spawner.OnSpawnerLoaded += SpawnMob;
 
     private void SpawnMob(object sender, Transform e)
     {
