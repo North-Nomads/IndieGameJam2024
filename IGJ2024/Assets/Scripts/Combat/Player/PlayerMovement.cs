@@ -1,15 +1,13 @@
 using System;
 using UnityEngine;
-using UnityEngine.EventSystems;
 
 [RequireComponent(typeof(Rigidbody2D), typeof(SpriteRenderer))]
 public class PlayerMovement : MonoBehaviour
 {
-    private const float GroundCheckRadius = .5f;
-    private const int GroundLayer = 1 << 6;
     private const string DeathZoneTag = "Death";
+    private const string EscapeTag = "Escape";
+
     [SerializeField, Min(0)] private float moveSpeed = 1f;
-    
     [SerializeField] private float dashSpeed;
     [SerializeField] private float dashDuration;
     [SerializeField] private float jumpStrength;
@@ -19,9 +17,10 @@ public class PlayerMovement : MonoBehaviour
     private PlayerTentacle _tentacle;
     private Rigidbody2D _rigidbody;
     private float _horizontalInput;
-    private bool _isDead;
+    private bool _canMove;
 
     public event EventHandler OnPlayerDead = delegate { };
+    public event EventHandler OnPlayerEscaped = delegate { };
 
     protected Vector3 SpriteBottom => transform.position - new Vector3(0, _spriteRenderer.bounds.size.y / 2, 0);
 
@@ -34,7 +33,7 @@ public class PlayerMovement : MonoBehaviour
 
     public void FixedUpdate()
     {
-        if (_isDead || _tentacle.IsHooked)
+        if (_canMove || _tentacle.IsHooked)
             return;
 
         MoveHorizontally();
@@ -50,8 +49,13 @@ public class PlayerMovement : MonoBehaviour
     {
         if (collision.CompareTag(DeathZoneTag))
         {
-            _isDead = true;
+            _canMove = true;
             OnPlayerDead(this, null);
+        }
+
+        else if (collision.CompareTag(EscapeTag))
+        {
+            OnPlayerEscaped(this, null);
         }
     }
 }

@@ -214,7 +214,7 @@ MonoBehaviour:
   hookRange: 100
   hookSurface:
     serializedVersion: 2
-    m_Bits: 64
+    m_Bits: 256
   hookSpeed: 8
 --- !u!50 &2288370284125223207
 Rigidbody2D:

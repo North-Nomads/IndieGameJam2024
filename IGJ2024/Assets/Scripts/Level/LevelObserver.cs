@@ -7,13 +7,22 @@ using UnityEngine;
 public class LevelObserver
 {
     private readonly RectTransform _deathPanel;
+    private readonly RectTransform _levelFinishedPanel;
 
-    public LevelObserver(RectTransform deathPanel, PlayerMovement _player)
+    public LevelObserver(RectTransform deathPanel, RectTransform levelFinishedPanel, PlayerMovement _player)
     {
         _deathPanel = deathPanel;
+        _levelFinishedPanel = levelFinishedPanel;
         deathPanel.gameObject.SetActive(false);
+        levelFinishedPanel.gameObject.SetActive(false);
 
         _player.OnPlayerDead += HandlePlayerDeath;
+        _player.OnPlayerEscaped += HandleLevelFinished;
+    }
+
+    private void HandleLevelFinished(object sender, EventArgs e)
+    {
+        _levelFinishedPanel.gameObject.SetActive(true);
     }
 
     private void HandlePlayerDeath(object sender, EventArgs e)
