@@ -49,6 +49,9 @@ public class PlayerMovement : MonoBehaviour
 
     private void Update()
     {
+        if (_playerCombat.IsDead)
+            return;
+
         if (Input.GetKeyDown(KeyCode.LeftShift))
             PerformDash();
 

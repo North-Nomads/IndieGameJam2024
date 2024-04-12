@@ -1,16 +1,26 @@
+using System;
 using UnityEngine;
 
 public class LevelLoader : MonoBehaviour
 {
     private PlayerCombat _player;
     private MobSpawner _mobSpawner;
+    private RectTransform _deathPanel;
     private LevelObserver _levelObserver;
 
     private void Start()
     {
         SpawnPlayer();
+        SpawnPlayerUI();
         SpawnMobs();
-        _levelObserver = new LevelObserver(_mobSpawner);
+        _levelObserver = new LevelObserver(_mobSpawner, _deathPanel, _player);
+    }
+
+    private void SpawnPlayerUI()
+    {
+        var deathPanel = Resources.Load<RectTransform>("Prefabs/Player/DeathPanel");
+        var canvas = FindObjectOfType<Canvas>();
+        _deathPanel = Instantiate(deathPanel, canvas.transform);
     }
 
     private void SpawnMobs()

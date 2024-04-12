@@ -1,9 +1,12 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 
 public class PlayerCombat : MonoBehaviour, IHittable
 {
     [SerializeField, Min(0)] private float debugDamage = 1f;
     [SerializeField, Min(0)] private float maximumHealth;
+
+    public event EventHandler OnPlayerDead = delegate { };
 
     private const int EnemyLayer = 7;
 
@@ -28,10 +31,11 @@ public class PlayerCombat : MonoBehaviour, IHittable
 
     private void Update()
     {
+        if (IsDead)
+            return;
+
         if (Input.GetMouseButtonDown(0))
-        {
             PerformAttack();
-        }
     }
 
     private void PerformAttack()
@@ -52,5 +56,7 @@ public class PlayerCombat : MonoBehaviour, IHittable
     {
         // Play death animation
         // Show death UI
+        OnPlayerDead(this, null);
+
     }
 }
