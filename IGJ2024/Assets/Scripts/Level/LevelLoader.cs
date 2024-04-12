@@ -4,11 +4,13 @@ public class LevelLoader : MonoBehaviour
 {
     private PlayerCombat _player;
     private MobSpawner _mobSpawner;
+    private LevelObserver _levelObserver;
 
     private void Start()
     {
         SpawnPlayer();
         SpawnMobs();
+        _levelObserver = new LevelObserver(_mobSpawner);
     }
 
     private void SpawnMobs()

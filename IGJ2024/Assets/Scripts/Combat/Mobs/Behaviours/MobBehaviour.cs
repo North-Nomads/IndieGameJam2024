@@ -16,6 +16,8 @@ public abstract class MobBehaviour : MonoBehaviour, IHittable
     private float _currentHealth;
     private float _attackCooldownLeft;
 
+    public event EventHandler OnMobDeath = delegate { };
+
     public PlayerCombat PlayerInstance { get; internal set; }
     protected Animator Animator { get => _animator; }
     protected Rigidbody2D Rigidbody { get => _rigidbody; }
@@ -29,12 +31,14 @@ public abstract class MobBehaviour : MonoBehaviour, IHittable
         {
             _currentHealth = value;
             if (_currentHealth <= 0)
+            {
+                OnMobDeath(this, null);
                 HandleDeath();
+            }
         }
     }
     protected bool CanAttackNow => _attackCooldownLeft <= 0;
     protected float DistanceToPlayer => Mathf.Abs(PlayerInstance.transform.position.x - transform.position.x);
-
     public abstract void GetHit(float damage);
     public abstract void HandleDeath();
 

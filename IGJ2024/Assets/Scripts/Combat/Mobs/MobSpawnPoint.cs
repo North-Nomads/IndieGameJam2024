@@ -7,12 +7,18 @@ using UnityEngine;
 public class MobSpawnPoint : MonoBehaviour
 {
     [SerializeField] private MobBehaviour mobToSpawn;
+    private MobSpawner _mobSpawner;
 
-    public void LinkMobSpawner(MobSpawner spawner) => spawner.OnSpawnerLoaded += SpawnMob;
+    public void LinkMobSpawner(MobSpawner spawner)
+    {
+        spawner.OnSpawnerLoaded += SpawnMob;
+        _mobSpawner = spawner;
+    }
 
     private void SpawnMob(object sender, PlayerCombat e)
     {
         var mob = Instantiate(mobToSpawn, transform.position, Quaternion.identity);
         mob.PlayerInstance = e;
+        mob.OnMobDeath += _mobSpawner.HandleMobDeath;
     }
 }
