@@ -4,7 +4,6 @@ using UnityEngine;
 public class LevelLoader : MonoBehaviour
 {
     private PlayerCombat _player;
-    private MobSpawner _mobSpawner;
     private RectTransform _deathPanel;
     private LevelObserver _levelObserver;
 
@@ -12,8 +11,7 @@ public class LevelLoader : MonoBehaviour
     {
         SpawnPlayer();
         SpawnPlayerUI();
-        SpawnMobs();
-        _levelObserver = new LevelObserver(_mobSpawner, _deathPanel, _player);
+        _levelObserver = new LevelObserver(_deathPanel, _player);
     }
 
     private void SpawnPlayerUI()
@@ -23,11 +21,6 @@ public class LevelLoader : MonoBehaviour
         _deathPanel = Instantiate(deathPanel, canvas.transform);
     }
 
-    private void SpawnMobs()
-    {
-        var spawnPoints = FindObjectsOfType<MobSpawnPoint>();
-        _mobSpawner = new MobSpawner(_player, spawnPoints);
-    }
 
     private void SpawnPlayer()
     {

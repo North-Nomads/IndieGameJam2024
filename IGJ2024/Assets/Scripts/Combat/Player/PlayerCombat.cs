@@ -33,18 +33,6 @@ public class PlayerCombat : MonoBehaviour, IHittable
     {
         if (IsDead)
             return;
-
-        if (Input.GetMouseButtonDown(0))
-            PerformAttack();
-    }
-
-    private void PerformAttack()
-    {
-        var collisions = Physics2D.OverlapBoxAll(transform.position, Vector2.one * 5, 0, 1 << EnemyLayer);
-        foreach (var collision in collisions)
-        {
-            collision.GetComponent<MobBehaviour>().GetHit(debugDamage);
-        }
     }
 
     public void GetHit(float damage)

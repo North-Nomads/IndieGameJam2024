@@ -7,13 +7,10 @@ using UnityEngine.SceneManagement;
 /// </summary>
 public class LevelObserver
 {
-    private readonly MobSpawner _mobSpawner;
     private readonly RectTransform _deathPanel;
 
-    public LevelObserver(MobSpawner mobSpawner, RectTransform deathPanel, PlayerCombat _player)
+    public LevelObserver(RectTransform deathPanel, PlayerCombat _player)
     {
-        _mobSpawner = mobSpawner;
-        _mobSpawner.OnLevelCleared += HandleLevelClearance;
         _deathPanel = deathPanel;
         deathPanel.gameObject.SetActive(false);
 
