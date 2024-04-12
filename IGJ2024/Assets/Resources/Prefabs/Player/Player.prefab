@@ -103,7 +103,7 @@ GameObject:
   - component: {fileID: 3725620523121127905}
   - component: {fileID: 7539291587788015033}
   - component: {fileID: 4672527685617225861}
-  - component: {fileID: -3540703142710444308}
+  - component: {fileID: 7997167129796191057}
   - component: {fileID: 2288370284125223207}
   - component: {fileID: -5482594615605965413}
   - component: {fileID: -5872247847647116840}
@@ -198,7 +198,8 @@ MonoBehaviour:
   dashSpeed: 10
   dashDuration: 0.3
   jumpStrength: 10
---- !u!114 &-3540703142710444308
+  fallMultiplier: -3
+--- !u!114 &7997167129796191057
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -207,11 +208,14 @@ MonoBehaviour:
   m_GameObject: {fileID: 7261478723945339514}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 12deb34411ca87b4ab8bd78eb51f5f09, type: 3}
+  m_Script: {fileID: 11500000, guid: 25f433016dcba224a9895a93abdc5b5b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  debugDamage: 1
-  maximumHealth: 10
+  hookRange: 100
+  hookSurface:
+    serializedVersion: 2
+    m_Bits: 64
+  hookSpeed: 8
 --- !u!50 &2288370284125223207
 Rigidbody2D:
   serializedVersion: 4

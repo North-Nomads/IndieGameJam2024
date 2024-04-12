@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class LevelLoader : MonoBehaviour
 {
-    private PlayerCombat _player;
+    private PlayerMovement _player;
     private RectTransform _deathPanel;
     private LevelObserver _levelObserver;
 
@@ -24,7 +24,7 @@ public class LevelLoader : MonoBehaviour
 
     private void SpawnPlayer()
     {
-        var playerPrefab = Resources.Load<PlayerCombat>("Prefabs/Player/Player");
+        var playerPrefab = Resources.Load<PlayerMovement>("Prefabs/Player/Player");
         var playerSpawnPoint = GameObject.FindGameObjectWithTag("Player Spawn").transform.position;
         _player = Instantiate(playerPrefab, playerSpawnPoint, Quaternion.identity);
     }
