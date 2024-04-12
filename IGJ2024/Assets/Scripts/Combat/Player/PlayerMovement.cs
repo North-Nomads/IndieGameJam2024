@@ -1,8 +1,11 @@
 using UnityEngine;
 
-[RequireComponent(typeof(Rigidbody2D))]
+[RequireComponent(typeof(Rigidbody2D), typeof(PlayerCombat), typeof(SpriteRenderer))]
 public class PlayerMovement : MonoBehaviour
 {
+    private const float GroundCheckRadius = .5f;
+    private const int GroundLayer = 1 << 6;
+
     [SerializeField, Min(0)] private float moveSpeed = 1f;
     
     [SerializeField] private float dashSpeed;
@@ -13,15 +16,25 @@ public class PlayerMovement : MonoBehaviour
     private bool IsDashing => _dashTimeLeft > 0;
 
     private Rigidbody2D _rigidbody;
+    private PlayerCombat _playerCombat;
     private float _horizontalInput;
+    private SpriteRenderer _spriteRenderer;
+
+    protected Vector3 SpriteBottom => transform.position - new Vector3(0, _spriteRenderer.bounds.size.y / 2, 0);
+    private bool IsGrounded => Physics2D.OverlapCircle(SpriteBottom, GroundCheckRadius, GroundLayer);
 
     private void Start()
     {
         _rigidbody = GetComponent<Rigidbody2D>();
+        _playerCombat = GetComponent<PlayerCombat>();
+        _spriteRenderer = GetComponent<SpriteRenderer>();
     }
 
     public void FixedUpdate()
     {
+        if (_playerCombat.IsDead)
+            return;
+
         if (IsDashing)
         {
             _rigidbody.position += _horizontalInput * dashSpeed * Time.fixedDeltaTime * Vector2.right;
@@ -39,7 +52,7 @@ public class PlayerMovement : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.LeftShift))
             PerformDash();
 
-        if (Input.GetKeyDown(KeyCode.Space))
+        if (Input.GetKeyDown(KeyCode.Space) && IsGrounded)
             PerformJump();
     }
 

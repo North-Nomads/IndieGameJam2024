@@ -19,6 +19,8 @@ public class PlayerCombat : MonoBehaviour, IHittable
         }
     }
 
+    public bool IsDead => CurrentHealth <= 0;
+
     private void Start()
     {
         CurrentHealth = maximumHealth;
@@ -48,6 +50,7 @@ public class PlayerCombat : MonoBehaviour, IHittable
 
     public void HandleDeath()
     {
-        Debug.Log("Player is dead");
+        // Play death animation
+        // Show death UI
     }
 }
