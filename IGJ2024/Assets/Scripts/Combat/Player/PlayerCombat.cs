@@ -57,6 +57,5 @@ public class PlayerCombat : MonoBehaviour, IHittable
         // Play death animation
         // Show death UI
         OnPlayerDead(this, null);
-
     }
 }
