@@ -18,7 +18,7 @@ public class PlayerMovement : MonoBehaviour
     private SpriteRenderer _spriteRenderer;
     private Rigidbody2D _rigidbody;
     private float _horizontalInput;
-    private bool _canMove;
+    //private bool _canMove;
     private bool _isFacingRight = true;
     private Animator _animator;
 
@@ -26,7 +26,7 @@ public class PlayerMovement : MonoBehaviour
     public event EventHandler OnPlayerEscaped = delegate { };
 
     protected Vector3 SpriteBottom => transform.position - new Vector3(0, _spriteRenderer.bounds.size.y / 2, 0);
-    private bool IsGrounded => !Physics2D.OverlapBox(SpriteBottom, feetBox, 0, groundLayer);
+    private bool IsGrounded => Physics2D.OverlapBox(SpriteBottom, feetBox, 0, groundLayer);
 
     private void Start()
     {
@@ -37,7 +37,9 @@ public class PlayerMovement : MonoBehaviour
 
     public void FixedUpdate()
     {
-        if (_canMove || IsGrounded)
+        _animator.SetBool("IsFloating", !IsGrounded);
+        
+        if (!IsGrounded)
             return;
 
         MoveHorizontally();
@@ -57,15 +59,10 @@ public class PlayerMovement : MonoBehaviour
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.CompareTag(DeathZoneTag))
-        {
-            _canMove = true;
             OnPlayerDead(this, null);
-        }
 
         else if (collision.CompareTag(EscapeTag))
-        {
             OnPlayerEscaped(this, null);
-        }
     }
 
     private void Flip()
