@@ -10,8 +10,6 @@ public class PlayerTentacle : MonoBehaviour
     private bool _isHooking;
     private Vector2 _hookTarget;
 
-    public bool IsHooked => _isHooking;
-
     private void Start()
     {
         _line = GetComponent<LineRenderer>();

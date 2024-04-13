@@ -4,10 +4,12 @@ using UnityEngine;
 [RequireComponent(typeof(Rigidbody2D), typeof(SpriteRenderer))]
 public class PlayerMovement : MonoBehaviour
 {
+    private const float GroundCheckRadius = .1f;
     private const string DeathZoneTag = "Death";
     private const string EscapeTag = "Escape";
 
     [SerializeField, Min(0)] private float moveSpeed = 1f;
+    [SerializeField] private LayerMask groundLayer;
     [SerializeField] private float dashSpeed;
     [SerializeField] private float dashDuration;
     [SerializeField] private float jumpStrength;
@@ -23,6 +25,8 @@ public class PlayerMovement : MonoBehaviour
     public event EventHandler OnPlayerEscaped = delegate { };
 
     protected Vector3 SpriteBottom => transform.position - new Vector3(0, _spriteRenderer.bounds.size.y / 2, 0);
+    private bool IsGrounded => !Physics2D.OverlapCircle(SpriteBottom, GroundCheckRadius, groundLayer);
+
 
     private void Start()
     {
@@ -33,7 +37,7 @@ public class PlayerMovement : MonoBehaviour
 
     public void FixedUpdate()
     {
-        if (_canMove || _tentacle.IsHooked)
+        if (_canMove || IsGrounded)
             return;
 
         MoveHorizontally();
@@ -42,7 +46,7 @@ public class PlayerMovement : MonoBehaviour
     private void MoveHorizontally()
     {
         _horizontalInput = Input.GetAxis("Horizontal");
-        _rigidbody.position += _horizontalInput * moveSpeed * Time.fixedDeltaTime * Vector2.right;
+        _rigidbody.velocity = new Vector2(_horizontalInput * moveSpeed, _rigidbody.velocity.y);
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
