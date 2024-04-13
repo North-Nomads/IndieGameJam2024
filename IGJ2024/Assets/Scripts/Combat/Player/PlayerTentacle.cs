@@ -26,6 +26,7 @@ public class PlayerTentacle : MonoBehaviour
     private LineRenderer _line;
     private Camera _mainCamera;
     private bool _isHooking;
+    private Coroutine _launchingTentacleProcess;
 
     private void Start()
     {
@@ -51,6 +52,9 @@ public class PlayerTentacle : MonoBehaviour
 
     private void ReleaseTentacle()
     {
+        if (_launchingTentacleProcess is not null)
+            StopCoroutine(_launchingTentacleProcess);
+
         // If was hooking - zoom out. Otherwise - don't 
         if (_isHooking)
             _playerVFX.AnimateCameraZoom(false);
@@ -71,7 +75,7 @@ public class PlayerTentacle : MonoBehaviour
         ProcessLaunchResult(mousePosition, hit, out bool wasClickMiss, out bool wasHitSuccessful);
 
         EnableHook();
-        StartCoroutine(LaunchTentacle(wasHitSuccessful, !wasClickMiss));
+        _launchingTentacleProcess = StartCoroutine(LaunchTentacle(wasHitSuccessful, !wasClickMiss));
 
         void ProcessLaunchResult(Vector2 mousePosition, RaycastHit2D hit, out bool hasMissed, out bool isHitSuccessful)
         {
