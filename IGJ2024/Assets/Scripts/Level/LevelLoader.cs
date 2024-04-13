@@ -20,7 +20,11 @@ public class LevelLoader : MonoBehaviour
     {
         var cinemachine = Instantiate(Resources.Load<GameObject>("Prefabs/Player/Cinemachine"));
         var cinemachineCamera = cinemachine.GetComponentInChildren<CinemachineVirtualCamera>();
+
+        CompositeCollider2D environmentCollider = FindObjectOfType<CompositeCollider2D>();
+
         cinemachineCamera.Follow = _player.transform;
+        cinemachineCamera.GetComponent<CinemachineConfiner2D>().m_BoundingShape2D = environmentCollider;
     }
 
     private void SpawnPlayerUI()
