@@ -16,9 +16,11 @@ public class PlayerTentacle : MonoBehaviour
     private Rigidbody2D _rigidbody;
     private bool _isHooking;
     private Vector2 _hookTarget;
+    private Camera _mainCamera;
 
     private void Start()
     {
+        _mainCamera = Camera.main;
         _line = GetComponent<LineRenderer>();
         _rigidbody = GetComponent<Rigidbody2D>();
     }
@@ -27,7 +29,8 @@ public class PlayerTentacle : MonoBehaviour
     {
         if (Input.GetMouseButtonDown(0))
         {
-            Vector2 mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+            
+            Vector2 mousePosition = _mainCamera.ScreenToWorldPoint(Input.mousePosition);
             RaycastHit2D hit = Physics2D.Raycast(_rigidbody.position, mousePosition - _rigidbody.position, hookRange, possibleHookTargets.value);
 
             bool hasMissed = hit.collider == null;

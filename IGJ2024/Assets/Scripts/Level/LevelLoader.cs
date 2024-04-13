@@ -1,4 +1,5 @@
 using UnityEngine;
+using Cinemachine;
 
 public class LevelLoader : MonoBehaviour
 {
@@ -11,7 +12,15 @@ public class LevelLoader : MonoBehaviour
     {
         SpawnPlayer();
         SpawnPlayerUI();
+        SetUpPlayerCamera();
         _levelObserver = new LevelObserver(_deathPanel, _levelFinishPanel, _player);
+    }
+
+    private void SetUpPlayerCamera()
+    {
+        var cinemachine = Instantiate(Resources.Load<GameObject>("Prefabs/Player/Cinemachine"));
+        var cinemachineCamera = cinemachine.GetComponentInChildren<CinemachineVirtualCamera>();
+        cinemachineCamera.Follow = _player.transform;
     }
 
     private void SpawnPlayerUI()
@@ -31,4 +40,6 @@ public class LevelLoader : MonoBehaviour
         var playerSpawnPoint = GameObject.FindGameObjectWithTag("Player Spawn").transform.position;
         _player = Instantiate(playerPrefab, playerSpawnPoint, Quaternion.identity);
     }
+
+
 }

@@ -72,10 +72,10 @@ public class PlayerMovement : MonoBehaviour
     {
         if (_isFacingRight && _horizontalInput < 0f || !_isFacingRight && _horizontalInput > 0f)
         {
+            var yValue = _isFacingRight ? 180f : 0f;
             _isFacingRight = !_isFacingRight;
-            Vector3 localScale = transform.localScale;
-            localScale.x *= -1f;
-            transform.localScale = localScale;
+            Vector3 rotator = new(transform.rotation.x, yValue, transform.rotation.z);
+            transform.rotation = Quaternion.Euler(rotator);
         }
     }
 }
