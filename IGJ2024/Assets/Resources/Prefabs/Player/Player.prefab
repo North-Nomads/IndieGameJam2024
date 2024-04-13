@@ -110,7 +110,7 @@ MonoBehaviour:
   dashDuration: 0.3
   jumpStrength: 10
   fallMultiplier: -3
-  feetBox: {x: 1.2, y: 0.075}
+  feetBox: {x: 0.6, y: 0.075}
 --- !u!114 &7997167129796191057
 MonoBehaviour:
   m_ObjectHideFlags: 0

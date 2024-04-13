@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using UnityEngine;
 
 [RequireComponent(typeof(Rigidbody2D), typeof(SpriteRenderer))]
@@ -18,9 +19,10 @@ public class PlayerMovement : MonoBehaviour
     private SpriteRenderer _spriteRenderer;
     private Rigidbody2D _rigidbody;
     private float _horizontalInput;
-    //private bool _canMove;
     private bool _isFacingRight = true;
     private Animator _animator;
+    private ParticleSystem _landingImpactVFX;
+    private bool _endedGrouned;
 
     public event EventHandler OnPlayerDead = delegate { };
     public event EventHandler OnPlayerEscaped = delegate { };
@@ -33,16 +35,35 @@ public class PlayerMovement : MonoBehaviour
         _rigidbody = GetComponent<Rigidbody2D>();
         _spriteRenderer = GetComponent<SpriteRenderer>();
         _animator = GetComponent<Animator>();
+
+        _landingImpactVFX = Resources.Load<ParticleSystem>("Prefabs/Hit Impact");
     }
 
     public void FixedUpdate()
     {
         _animator.SetBool("IsFloating", !IsGrounded);
         
+        if (!_endedGrouned && IsGrounded)
+            SpawnLandingVFX();
+
+        _endedGrouned = IsGrounded;
+
         if (!IsGrounded)
             return;
 
         MoveHorizontally();
+    }
+
+    private void SpawnLandingVFX()
+    {
+        StartCoroutine(SpawnAndDestroyParticles());
+
+        IEnumerator SpawnAndDestroyParticles()
+        {
+            var instance = Instantiate(_landingImpactVFX, SpriteBottom, Quaternion.identity);
+            yield return new WaitForSeconds(1f);
+            Destroy(instance.gameObject);
+        }
     }
 
     private void MoveHorizontally()
