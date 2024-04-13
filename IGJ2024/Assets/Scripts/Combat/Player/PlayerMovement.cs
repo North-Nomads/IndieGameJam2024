@@ -4,7 +4,6 @@ using UnityEngine;
 [RequireComponent(typeof(Rigidbody2D), typeof(SpriteRenderer))]
 public class PlayerMovement : MonoBehaviour
 {
-    private const float GroundCheckRadius = .1f;
     private const string DeathZoneTag = "Death";
     private const string EscapeTag = "Escape";
 
@@ -14,9 +13,9 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private float dashDuration;
     [SerializeField] private float jumpStrength;
     [SerializeField] private float fallMultiplier;
+    [SerializeField] private Vector2 feetBox;
 
     private SpriteRenderer _spriteRenderer;
-    private PlayerTentacle _tentacle;
     private Rigidbody2D _rigidbody;
     private float _horizontalInput;
     private bool _canMove;
@@ -25,14 +24,12 @@ public class PlayerMovement : MonoBehaviour
     public event EventHandler OnPlayerEscaped = delegate { };
 
     protected Vector3 SpriteBottom => transform.position - new Vector3(0, _spriteRenderer.bounds.size.y / 2, 0);
-    private bool IsGrounded => !Physics2D.OverlapCircle(SpriteBottom, GroundCheckRadius, groundLayer);
-
+    private bool IsGrounded => !Physics2D.OverlapBox(SpriteBottom, feetBox, 0, groundLayer);
 
     private void Start()
     {
         _rigidbody = GetComponent<Rigidbody2D>();
         _spriteRenderer = GetComponent<SpriteRenderer>();
-        _tentacle = GetComponent<PlayerTentacle>();
     }
 
     public void FixedUpdate()
@@ -61,5 +58,10 @@ public class PlayerMovement : MonoBehaviour
         {
             OnPlayerEscaped(this, null);
         }
+    }
+
+    private void OnDrawGizmos()
+    {
+        Gizmos.DrawCube(SpriteBottom, feetBox);
     }
 }
