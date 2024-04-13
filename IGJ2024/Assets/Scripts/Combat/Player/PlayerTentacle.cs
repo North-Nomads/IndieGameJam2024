@@ -56,10 +56,11 @@ public class PlayerTentacle : MonoBehaviour
 
         if (Input.GetMouseButtonUp(0))
         {
+            if (_isHooking)
+                _playerVFX.AnimateCameraZoom(false);
             _isHooking = false;
             ClearHookLine();
             _hookMountElapsedTime = 0f;
-            _playerVFX.AnimateCameraZoom(false);
         }
     }
 
