@@ -18,11 +18,10 @@ public class PlayerMovement : MonoBehaviour
 
     private SpriteRenderer _spriteRenderer;
     private Rigidbody2D _rigidbody;
-    private float _horizontalInput;
-    private bool _isFacingRight = true;
-    private Animator _animator;
     private PlayerVFX _playerVFX;
-    private ParticleSystem _landingImpactVFX;
+    private Animator _animator;
+    private bool _isFacingRight = true;
+    private float _horizontalInput;
     private bool _endedGrounded;
 
     public event EventHandler OnPlayerDead = delegate { };

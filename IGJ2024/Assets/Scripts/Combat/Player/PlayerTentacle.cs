@@ -59,6 +59,7 @@ public class PlayerTentacle : MonoBehaviour
             _isHooking = false;
             ClearHookLine();
             _hookMountElapsedTime = 0f;
+            _playerVFX.AnimateCameraZoom(false);
         }
     }
 
@@ -80,7 +81,10 @@ public class PlayerTentacle : MonoBehaviour
         }
         _isHooking = hasHit;
         if (hasHit)
+        {
             _playerVFX.SpawnHitVFX(_hookTarget);
+            _playerVFX.AnimateCameraZoom(true);
+        }
     }
 
     private void FixedUpdate()

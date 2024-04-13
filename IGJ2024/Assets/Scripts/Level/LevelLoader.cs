@@ -25,6 +25,7 @@ public class LevelLoader : MonoBehaviour
 
         cinemachineCamera.Follow = _player.transform;
         cinemachineCamera.GetComponent<CinemachineConfiner2D>().m_BoundingShape2D = environmentCollider;
+        _player.GetComponent<PlayerVFX>().VirtualCamera = cinemachineCamera; 
     }
 
     private void SpawnPlayerUI()
