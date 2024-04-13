@@ -26,6 +26,7 @@ public class PlayerMovement : MonoBehaviour
 
     public event EventHandler OnPlayerDead = delegate { };
     public event EventHandler OnPlayerEscaped = delegate { };
+    public event EventHandler OnPlayerLanded = delegate { };
 
     protected Vector3 SpriteBottom => transform.position - new Vector3(0, _spriteRenderer.bounds.size.y / 2, 0);
     private bool IsGrounded => Physics2D.OverlapBox(SpriteBottom, feetBox, 0, groundLayer);
@@ -43,7 +44,10 @@ public class PlayerMovement : MonoBehaviour
         _animator.SetBool("IsFloating", !IsGrounded);
         
         if (!_endedGrounded && IsGrounded)
+        {
+            OnPlayerLanded(this, null);
             _playerVFX.SpawnLandingVFX(SpriteBottom);
+        }
 
         _endedGrounded = IsGrounded;
 

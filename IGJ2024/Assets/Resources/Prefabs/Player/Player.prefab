@@ -179,8 +179,6 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 320
   hookPivot: {fileID: 4296181674843001915}
-  hookSpeedMultiplier: 10
-  hookGrowthSpeed: 0.2
   hookSpeed:
     serializedVersion: 2
     m_Curve:
@@ -205,7 +203,9 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
-  hookBoostTime: 0.1
+  hookSpeedMultiplier: 2
+  hookGrowthSpeed: 0.2
+  hookBoostTime: 0.15
 --- !u!50 &2288370284125223207
 Rigidbody2D:
   serializedVersion: 4

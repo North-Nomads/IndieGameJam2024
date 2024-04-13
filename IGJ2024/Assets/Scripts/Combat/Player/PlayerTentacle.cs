@@ -1,9 +1,12 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using UnityEngine;
 
 [RequireComponent(typeof(PlayerVFX))]
 public class PlayerTentacle : MonoBehaviour
 {
+    public const float MaxSpeed = 16f;
+
     [Header("General")]
     [SerializeField] private float hookRange;
     [SerializeField] private LayerMask hookSurface;
@@ -11,22 +14,30 @@ public class PlayerTentacle : MonoBehaviour
     [SerializeField] private Transform hookPivot;
 
     [Header("Speed")]
+    [SerializeField] private AnimationCurve hookSpeed;
     [SerializeField] private float hookSpeedMultiplier;
     [SerializeField] private float hookGrowthSpeed;
-    [SerializeField] private AnimationCurve hookSpeed;
     [SerializeField] private float hookBoostTime;
 
+    // GameObject components
     private PlayerMovement _playerMovement;
-    private float _hookMountElapsedTime;
     private Rigidbody2D _rigidbody;
     private PlayerVFX _playerVFX;
     private Animator _animator;
+    private Camera _mainCamera;
+    private LineRenderer _line;
+    
+    // Fields
+    private Coroutine _launchingTentacleProcess;
+    private float _hookMountElapsedTime;
     private Vector2 _hookOrigin;
     private Vector2 _hookTarget;
-    private LineRenderer _line;
-    private Camera _mainCamera;
     private bool _isHooking;
-    private Coroutine _launchingTentacleProcess;
+    private float _currentSpeed;
+    private float _windSpeed;
+
+    private bool HasReachedHookTarget => Vector2.Distance(_hookTarget, _hookOrigin) < 1f;
+
 
     private void Start()
     {
@@ -36,6 +47,14 @@ public class PlayerTentacle : MonoBehaviour
         _playerVFX = GetComponent<PlayerVFX>();
         _animator = GetComponent<Animator>();
         _playerMovement = GetComponent<PlayerMovement>();
+        _playerMovement.OnPlayerLanded += HandlePlayerLanding;
+
+        _windSpeed = hookSpeed.Evaluate(1) * .05f * Time.fixedDeltaTime;
+    }
+
+    private void HandlePlayerLanding(object sender, EventArgs e)
+    {
+        _currentSpeed = 0f;
     }
 
     private void Update()
@@ -129,18 +148,29 @@ public class PlayerTentacle : MonoBehaviour
 
     private void RideHook()
     {
-        float currentSpeed = EvaluateSpeed();
+        print(EvaluateSpeed());
+        _currentSpeed = EvaluateSpeed();
 
-        Vector2 hookDirection = (_hookTarget - (Vector2)_hookOrigin).normalized;
-        _rigidbody.velocity = hookDirection * currentSpeed;
+        Vector2 hookDirection = (_hookTarget - _hookOrigin).normalized;
+        _rigidbody.velocity = hookDirection * _currentSpeed;
         UpdateHookLine(_hookTarget);
 
         float EvaluateSpeed()
         {
-            float clamp = Mathf.Clamp01(_hookMountElapsedTime / hookBoostTime);
-            float currentSpeed = hookSpeed.Evaluate(clamp) * hookSpeedMultiplier;
+            // During the boost time -> increase the speed
+            // Once the boosting time is over - maintain end point speed
+
             _hookMountElapsedTime += Time.fixedDeltaTime;
-            return currentSpeed;
+            float clamp = Mathf.Clamp01(_hookMountElapsedTime / hookBoostTime);
+            float newSpeed;
+            if (clamp < 1)
+                newSpeed = _currentSpeed + hookSpeed.Evaluate(clamp) * hookSpeedMultiplier;
+            else if (HasReachedHookTarget)
+                newSpeed = 0f;
+            else
+                newSpeed = _currentSpeed - _windSpeed;
+
+            return Mathf.Clamp(newSpeed, 0, MaxSpeed);
         }
     }
 
