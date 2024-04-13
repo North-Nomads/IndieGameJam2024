@@ -1,5 +1,4 @@
 ﻿using System.Collections;
-using TMPro;
 using UnityEngine;
 
 [RequireComponent(typeof(PlayerVFX))]
@@ -32,13 +31,39 @@ public class PlayerTentacle : MonoBehaviour
     private void Update()
     {
         if (Input.GetMouseButtonDown(0))
-        {
-            Vector2 mousePosition = _mainCamera.ScreenToWorldPoint(Input.mousePosition);
-            RaycastHit2D hit = Physics2D.Raycast(_rigidbody.position, mousePosition - _rigidbody.position, hookRange, possibleHookTargets.value);
+            LaunchTentacle();
 
-            bool hasMissed = hit.collider == null;
-            bool isHitSuccessful = false;
-            
+        if (Input.GetMouseButtonUp(0))
+            ReleaseTentacle();
+    }
+
+    private void ReleaseTentacle()
+    {
+        // If was hooking - zoom out. Otherwise - don't 
+        if (_isHooking)
+            _playerVFX.AnimateCameraZoom(false);
+
+        // Reset variables for the next launch
+        _isHooking = false;
+        ClearHookLine();
+        _hookMountElapsedTime = 0f;
+    }
+
+    private void LaunchTentacle()
+    {
+        Vector2 mousePosition = _mainCamera.ScreenToWorldPoint(Input.mousePosition);
+        RaycastHit2D hit = Physics2D.Raycast(_rigidbody.position, mousePosition - _rigidbody.position, hookRange, possibleHookTargets.value);
+        
+        ProcessLaunchResult(mousePosition, hit, out bool wasClickMiss, out bool wasHitSuccessful);
+
+        EnableHook();
+        StartCoroutine(LaunchTentacle(wasHitSuccessful, !wasClickMiss));
+
+        void ProcessLaunchResult(Vector2 mousePosition, RaycastHit2D hit, out bool hasMissed, out bool isHitSuccessful)
+        {
+            hasMissed = hit.collider == null;
+            isHitSuccessful = false;
+
             // By default, player has missed.
             // The tentacle will try to reach the point in that direction by the tentacle range
             _hookTarget = _rigidbody.position + (mousePosition - _rigidbody.position).normalized * hookRange;
@@ -50,19 +75,6 @@ public class PlayerTentacle : MonoBehaviour
                 isHitSuccessful = Physics2D.OverlapCircle(hit.point, .1f, hookSurface.value);
                 _hookTarget = hit.point; // the point will be overwritten in any case
             }
-
-            EnableHook();
-            StartCoroutine(LaunchTentacle(isHitSuccessful, !hasMissed));
-        }
-
-        if (Input.GetMouseButtonUp(0))
-        {
-            // If was hooking - zoom out. Otherwise - don't 
-            if (_isHooking)
-                _playerVFX.AnimateCameraZoom(false);
-            _isHooking = false;
-            ClearHookLine();
-            _hookMountElapsedTime = 0f;
         }
     }
 
@@ -89,7 +101,6 @@ public class PlayerTentacle : MonoBehaviour
 
         if (_isHooking)
             _playerVFX.AnimateCameraZoom(true);
-
     }
 
     private void FixedUpdate()
