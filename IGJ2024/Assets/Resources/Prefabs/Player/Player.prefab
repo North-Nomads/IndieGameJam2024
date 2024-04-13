@@ -221,6 +221,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 256
   hookSpeed: 8
+  hookThrowTime: 1
 --- !u!50 &2288370284125223207
 Rigidbody2D:
   serializedVersion: 4
@@ -404,7 +405,7 @@ LineRenderer:
       atime6: 0
       atime7: 0
       m_Mode: 0
-      m_ColorSpace: 0
+      m_ColorSpace: -1
       m_NumColorKeys: 2
       m_NumAlphaKeys: 2
     numCornerVertices: 0

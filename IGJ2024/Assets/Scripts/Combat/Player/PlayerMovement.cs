@@ -59,9 +59,4 @@ public class PlayerMovement : MonoBehaviour
             OnPlayerEscaped(this, null);
         }
     }
-
-    private void OnDrawGizmos()
-    {
-        Gizmos.DrawCube(SpriteBottom, feetBox);
-    }
 }
