@@ -1,4 +1,5 @@
 ﻿using System.Collections;
+using TMPro;
 using UnityEngine;
 
 [RequireComponent(typeof(PlayerVFX))]
@@ -40,7 +41,7 @@ public class PlayerTentacle : MonoBehaviour
             
             // By default, player has missed.
             // The tentacle will try to reach the point in that direction by the tentacle range
-            _hookTarget = mousePosition;
+            _hookTarget = _rigidbody.position + (mousePosition - _rigidbody.position).normalized * hookRange;
 
             // In case if player has hit something
             if (!hasMissed)
@@ -51,11 +52,12 @@ public class PlayerTentacle : MonoBehaviour
             }
 
             EnableHook();
-            StartCoroutine(LaunchTentacle(isHitSuccessful));
+            StartCoroutine(LaunchTentacle(isHitSuccessful, !hasMissed));
         }
 
         if (Input.GetMouseButtonUp(0))
         {
+            // If was hooking - zoom out. Otherwise - don't 
             if (_isHooking)
                 _playerVFX.AnimateCameraZoom(false);
             _isHooking = false;
@@ -64,7 +66,7 @@ public class PlayerTentacle : MonoBehaviour
         }
     }
 
-    private IEnumerator LaunchTentacle(bool hasHit)
+    private IEnumerator LaunchTentacle(bool hasHit, bool shouldSpawnVFX)
     {
         var direction = (_rigidbody.position - _hookTarget).normalized;
 
@@ -80,12 +82,14 @@ public class PlayerTentacle : MonoBehaviour
             UpdateHookLine(currentPoint);
             yield return null;
         }
+        
         _isHooking = hasHit;
-        if (hasHit)
-        {
+        if (shouldSpawnVFX)
             _playerVFX.SpawnHitVFX(_hookTarget);
+
+        if (_isHooking)
             _playerVFX.AnimateCameraZoom(true);
-        }
+
     }
 
     private void FixedUpdate()
