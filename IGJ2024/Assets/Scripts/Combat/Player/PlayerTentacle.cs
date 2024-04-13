@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using UnityEngine;
 
+[RequireComponent(typeof(PlayerVFX))]
 public class PlayerTentacle : MonoBehaviour
 {
     [SerializeField] private float hookRange;
@@ -14,6 +15,7 @@ public class PlayerTentacle : MonoBehaviour
     private float _hookMountElapsedTime;
     private LineRenderer _line;
     private Rigidbody2D _rigidbody;
+    private PlayerVFX _playerVFX;
     private bool _isHooking;
     private Vector2 _hookTarget;
     private Camera _mainCamera;
@@ -23,13 +25,13 @@ public class PlayerTentacle : MonoBehaviour
         _mainCamera = Camera.main;
         _line = GetComponent<LineRenderer>();
         _rigidbody = GetComponent<Rigidbody2D>();
+        _playerVFX = GetComponent<PlayerVFX>();
     }
 
     private void Update()
     {
         if (Input.GetMouseButtonDown(0))
         {
-            
             Vector2 mousePosition = _mainCamera.ScreenToWorldPoint(Input.mousePosition);
             RaycastHit2D hit = Physics2D.Raycast(_rigidbody.position, mousePosition - _rigidbody.position, hookRange, possibleHookTargets.value);
 
@@ -77,6 +79,8 @@ public class PlayerTentacle : MonoBehaviour
             yield return null;
         }
         _isHooking = hasHit;
+        if (hasHit)
+            _playerVFX.SpawnHitVFX(_hookTarget);
     }
 
     private void FixedUpdate()

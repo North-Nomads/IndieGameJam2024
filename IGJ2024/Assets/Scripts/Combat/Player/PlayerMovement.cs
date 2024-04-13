@@ -21,8 +21,8 @@ public class PlayerMovement : MonoBehaviour
     private float _horizontalInput;
     private bool _isFacingRight = true;
     private Animator _animator;
+    private PlayerVFX _playerVFX;
     private ParticleSystem _landingImpactVFX;
-    private ParticleSystem _tentacleHitImpactVFX;
     private bool _endedGrounded;
 
     public event EventHandler OnPlayerDead = delegate { };
@@ -36,9 +36,7 @@ public class PlayerMovement : MonoBehaviour
         _rigidbody = GetComponent<Rigidbody2D>();
         _spriteRenderer = GetComponent<SpriteRenderer>();
         _animator = GetComponent<Animator>();
-
-        _landingImpactVFX = Resources.Load<ParticleSystem>("Prefabs/LandingImpact");
-        _tentacleHitImpactVFX = Resources.Load<ParticleSystem>("Prefabs/HitImpact");
+        _playerVFX = GetComponent<PlayerVFX>();
     }
 
     public void FixedUpdate()
@@ -46,7 +44,7 @@ public class PlayerMovement : MonoBehaviour
         _animator.SetBool("IsFloating", !IsGrounded);
         
         if (!_endedGrounded && IsGrounded)
-            SpawnLandingVFX();
+            _playerVFX.SpawnLandingVFX(SpriteBottom);
 
         _endedGrounded = IsGrounded;
 
@@ -56,14 +54,7 @@ public class PlayerMovement : MonoBehaviour
         MoveHorizontally();
     }
 
-    private void SpawnLandingVFX() => StartCoroutine(SpawnAndDestroyParticles(_landingImpactVFX));
-
-    private IEnumerator SpawnAndDestroyParticles(ParticleSystem system)
-    {
-        var instance = Instantiate(system, SpriteBottom, Quaternion.identity);
-        yield return new WaitForSeconds(1f);
-        Destroy(instance.gameObject);
-    }
+    
 
     private void MoveHorizontally()
     {
