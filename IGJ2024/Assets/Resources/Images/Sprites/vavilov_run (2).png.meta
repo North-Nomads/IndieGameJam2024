@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 62d1e745b0eb1ff4da07ceddf972f8ff
+guid: 9c68a38d1f4aacb48ac157abaa0c7a06
 TextureImporter:
   internalIDToNameTable: []
   externalObjects: {}
@@ -69,7 +69,7 @@ TextureImporter:
   platformSettings:
   - serializedVersion: 3
     buildTarget: DefaultTexturePlatform
-    maxTextureSize: 512
+    maxTextureSize: 2048
     resizeAlgorithm: 0
     textureFormat: -1
     textureCompression: 0
@@ -108,10 +108,10 @@ TextureImporter:
     forceMaximumCompressionQuality_BC6H_BC7: 0
   - serializedVersion: 3
     buildTarget: WebGL
-    maxTextureSize: 512
+    maxTextureSize: 2048
     resizeAlgorithm: 0
     textureFormat: -1
-    textureCompression: 0
+    textureCompression: 1
     compressionQuality: 50
     crunchedCompression: 0
     allowsAlphaSplitting: 0
@@ -123,13 +123,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: vavilov_idle_0
+      name: vavilov_run (2)_0
       rect:
         serializedVersion: 2
         x: 16
-        y: 139
-        width: 43
-        height: 51
+        y: 426
+        width: 26
+        height: 54
       alignment: 7
       pivot: {x: 0.5, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -137,20 +137,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 4f6e62da6cb250141bbce334e06086a9
-      internalID: -421025151
+      spriteID: df38a3c46e0e7a84298a330c4a82c811
+      internalID: 181438473
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: vavilov_idle_1
+      name: vavilov_run (2)_1
       rect:
         serializedVersion: 2
-        x: 80
-        y: 139
-        width: 43
-        height: 50
+        x: 96
+        y: 427
+        width: 26
+        height: 54
       alignment: 7
       pivot: {x: 0.5, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -158,62 +158,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: ee4f2389c25c1744f9abc63f40042c98
-      internalID: 1057218573
+      spriteID: b117e49d01997ee4abbff211871bb999
+      internalID: 1605046429
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: vavilov_idle_2
-      rect:
-        serializedVersion: 2
-        x: 16
-        y: 75
-        width: 43
-        height: 49
-      alignment: 7
-      pivot: {x: 0.5, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: be858a9147062984f85ff0081e079169
-      internalID: 1041495281
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: vavilov_idle_3
-      rect:
-        serializedVersion: 2
-        x: 80
-        y: 75
-        width: 39
-        height: 47
-      alignment: 7
-      pivot: {x: 0.5, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 779b48099aabc42469f48990ebefc5ac
-      internalID: 35281538
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: vavilov_idle_4
+      name: vavilov_run (2)_2
       rect:
         serializedVersion: 2
         x: 16
-        y: 11
-        width: 43
-        height: 49
+        y: 345
+        width: 21
+        height: 55
       alignment: 7
       pivot: {x: 0.5, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -221,20 +179,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 425dee09887d26441b2ed2ac13f0612b
-      internalID: 395500744
+      spriteID: 75ca733c4cad20445bf66790fcd7f9c5
+      internalID: 1185273233
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: vavilov_idle_5
+      name: vavilov_run (2)_3
       rect:
         serializedVersion: 2
-        x: 80
-        y: 11
-        width: 43
-        height: 50
+        x: 98
+        y: 345
+        width: 16
+        height: 56
       alignment: 7
       pivot: {x: 0.5, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -242,8 +200,155 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 25185b4b5fce7c942a108bbd7f103796
-      internalID: 880314058
+      spriteID: 6c19a2d74145d0a4691527611bf7b70d
+      internalID: -1912576187
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: vavilov_run (2)_4
+      rect:
+        serializedVersion: 2
+        x: 16
+        y: 263
+        width: 21
+        height: 57
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 820845532ba25524491ec508bfbb17a9
+      internalID: -1652761003
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: vavilov_run (2)_5
+      rect:
+        serializedVersion: 2
+        x: 94
+        y: 263
+        width: 25
+        height: 56
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 9f5dd327ba5c3ca4082be369f0d44d1b
+      internalID: 2145619761
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: vavilov_run (2)_6
+      rect:
+        serializedVersion: 2
+        x: 13
+        y: 181
+        width: 24
+        height: 54
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b82e0eb9ae175074080bd1200754fd0a
+      internalID: -1788802467
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: vavilov_run (2)_7
+      rect:
+        serializedVersion: 2
+        x: 98
+        y: 181
+        width: 19
+        height: 55
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 4dce366b73f8e174a9cf8b46d7cacd32
+      internalID: -9250284
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: vavilov_run (2)_8
+      rect:
+        serializedVersion: 2
+        x: 16
+        y: 99
+        width: 19
+        height: 56
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 29fea0340b5a052419c18c22533fbd2c
+      internalID: -1899294190
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: vavilov_run (2)_9
+      rect:
+        serializedVersion: 2
+        x: 98
+        y: 99
+        width: 23
+        height: 57
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 56b92b443138e264b9d7310436241f3f
+      internalID: -385138754
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: vavilov_run (2)_10
+      rect:
+        serializedVersion: 2
+        x: 16
+        y: 17
+        width: 25
+        height: 56
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b5f479f5ffedba048a33f4c2a7b268cf
+      internalID: -355755182
       vertices: []
       indices: 
       edges: []
@@ -259,12 +364,17 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     nameFileIdTable:
-      vavilov_idle_0: -421025151
-      vavilov_idle_1: 1057218573
-      vavilov_idle_2: 1041495281
-      vavilov_idle_3: 35281538
-      vavilov_idle_4: 395500744
-      vavilov_idle_5: 880314058
+      vavilov_run (2)_0: 181438473
+      vavilov_run (2)_1: 1605046429
+      vavilov_run (2)_10: -355755182
+      vavilov_run (2)_2: 1185273233
+      vavilov_run (2)_3: -1912576187
+      vavilov_run (2)_4: -1652761003
+      vavilov_run (2)_5: 2145619761
+      vavilov_run (2)_6: -1788802467
+      vavilov_run (2)_7: -9250284
+      vavilov_run (2)_8: -1899294190
+      vavilov_run (2)_9: -385138754
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

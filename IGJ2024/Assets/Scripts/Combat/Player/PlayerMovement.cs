@@ -19,6 +19,8 @@ public class PlayerMovement : MonoBehaviour
     private Rigidbody2D _rigidbody;
     private float _horizontalInput;
     private bool _canMove;
+    private bool _isFacingRight = true;
+    private Animator _animator;
 
     public event EventHandler OnPlayerDead = delegate { };
     public event EventHandler OnPlayerEscaped = delegate { };
@@ -30,6 +32,7 @@ public class PlayerMovement : MonoBehaviour
     {
         _rigidbody = GetComponent<Rigidbody2D>();
         _spriteRenderer = GetComponent<SpriteRenderer>();
+        _animator = GetComponent<Animator>();
     }
 
     public void FixedUpdate()
@@ -44,6 +47,11 @@ public class PlayerMovement : MonoBehaviour
     {
         _horizontalInput = Input.GetAxis("Horizontal");
         _rigidbody.velocity = new Vector2(_horizontalInput * moveSpeed, _rigidbody.velocity.y);
+        _animator.SetBool("IsMoving", true);
+        if (_horizontalInput != 0)
+            Flip();
+        else
+            _animator.SetBool("IsMoving", false);
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
@@ -57,6 +65,17 @@ public class PlayerMovement : MonoBehaviour
         else if (collision.CompareTag(EscapeTag))
         {
             OnPlayerEscaped(this, null);
+        }
+    }
+
+    private void Flip()
+    {
+        if (_isFacingRight && _horizontalInput < 0f || !_isFacingRight && _horizontalInput > 0f)
+        {
+            _isFacingRight = !_isFacingRight;
+            Vector3 localScale = transform.localScale;
+            localScale.x *= -1f;
+            transform.localScale = localScale;
         }
     }
 }

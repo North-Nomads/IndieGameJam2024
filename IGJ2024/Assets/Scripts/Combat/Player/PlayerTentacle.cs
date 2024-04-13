@@ -51,7 +51,7 @@ public class PlayerTentacle : MonoBehaviour
     private void DrawHookLine()
     {
         _line.enabled = true;
-        _line.SetPositions(new Vector3[] { transform.position, _hookTarget });
+        _line.SetPositions(new Vector3[] { transform.position + Vector3.up * .5f, _hookTarget });
     }
 
     private void ClearHookLine()
