@@ -7,7 +7,6 @@ TagManager:
   - Player Spawn
   - Death
   - Escape
-  - Environment
   layers:
   - Default
   - TransparentFX
