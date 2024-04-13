@@ -4,21 +4,28 @@ using UnityEngine;
 [RequireComponent(typeof(PlayerVFX))]
 public class PlayerTentacle : MonoBehaviour
 {
+    [Header("General")]
     [SerializeField] private float hookRange;
     [SerializeField] private LayerMask hookSurface;
     [SerializeField] private LayerMask possibleHookTargets;
+    [SerializeField] private Transform hookPivot;
+
+    [Header("Speed")]
     [SerializeField] private float hookSpeedMultiplier;
     [SerializeField] private float hookGrowthSpeed;
     [SerializeField] private AnimationCurve hookSpeed;
     [SerializeField] private float hookBoostTime;
 
+    private PlayerMovement _playerMovement;
     private float _hookMountElapsedTime;
-    private LineRenderer _line;
     private Rigidbody2D _rigidbody;
     private PlayerVFX _playerVFX;
-    private bool _isHooking;
+    private Animator _animator;
+    private Vector2 _hookOrigin;
     private Vector2 _hookTarget;
+    private LineRenderer _line;
     private Camera _mainCamera;
+    private bool _isHooking;
 
     private void Start()
     {
@@ -26,10 +33,15 @@ public class PlayerTentacle : MonoBehaviour
         _line = GetComponent<LineRenderer>();
         _rigidbody = GetComponent<Rigidbody2D>();
         _playerVFX = GetComponent<PlayerVFX>();
+        _animator = GetComponent<Animator>();
+        _playerMovement = GetComponent<PlayerMovement>();
     }
 
     private void Update()
     {
+        _animator.SetBool("IsHooking", _isHooking);
+        _hookOrigin = new (hookPivot.position.x, hookPivot.position.y);
+
         if (Input.GetMouseButtonDown(0))
             LaunchTentacle();
 
@@ -52,8 +64,10 @@ public class PlayerTentacle : MonoBehaviour
     private void LaunchTentacle()
     {
         Vector2 mousePosition = _mainCamera.ScreenToWorldPoint(Input.mousePosition);
-        RaycastHit2D hit = Physics2D.Raycast(_rigidbody.position, mousePosition - _rigidbody.position, hookRange, possibleHookTargets.value);
-        
+        RaycastHit2D hit = Physics2D.Raycast(_hookOrigin, mousePosition - _rigidbody.position, hookRange, possibleHookTargets.value);
+
+        _playerMovement.TurnTowards(mousePosition.x > _hookOrigin.x);
+
         ProcessLaunchResult(mousePosition, hit, out bool wasClickMiss, out bool wasHitSuccessful);
 
         EnableHook();
@@ -80,9 +94,9 @@ public class PlayerTentacle : MonoBehaviour
 
     private IEnumerator LaunchTentacle(bool hasHit, bool shouldSpawnVFX)
     {
-        var direction = (_rigidbody.position - _hookTarget).normalized;
+        var direction = (_hookOrigin - _hookTarget).normalized;
 
-        var currentPoint = _rigidbody.position;
+        var currentPoint = _hookOrigin;
         var isGettingCloser = true;
         var previousDistance = Vector2.Distance(currentPoint, _hookTarget);
 
@@ -113,7 +127,7 @@ public class PlayerTentacle : MonoBehaviour
     {
         float currentSpeed = EvaluateSpeed();
 
-        Vector2 hookDirection = (_hookTarget - (Vector2)transform.position).normalized;
+        Vector2 hookDirection = (_hookTarget - (Vector2)_hookOrigin).normalized;
         _rigidbody.velocity = hookDirection * currentSpeed;
         UpdateHookLine(_hookTarget);
 
@@ -127,7 +141,7 @@ public class PlayerTentacle : MonoBehaviour
     }
 
     private void UpdateHookLine(Vector2 endpoint) 
-        => _line.SetPositions(new Vector3[] { transform.position + Vector3.up * .5f, endpoint });
+        => _line.SetPositions(new Vector3[] { _hookOrigin, endpoint });
 
     private void EnableHook() => _line.enabled = true;
 

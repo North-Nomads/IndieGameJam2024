@@ -85,4 +85,19 @@ public class PlayerMovement : MonoBehaviour
             transform.rotation = Quaternion.Euler(rotator);
         }
     }
+
+    public void TurnTowards(bool towardsLeft)
+    {
+        _isFacingRight = !_isFacingRight;
+        if (towardsLeft)
+        {
+            Vector3 rotator = new(transform.rotation.x, 0f, transform.rotation.z);
+            transform.rotation = Quaternion.Euler(rotator);
+        }
+        else
+        {
+            Vector3 rotator = new(transform.rotation.x, 180f, transform.rotation.z);
+            transform.rotation = Quaternion.Euler(rotator);
+        }
+    }
 }
