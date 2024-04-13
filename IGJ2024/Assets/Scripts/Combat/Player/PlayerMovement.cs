@@ -22,7 +22,8 @@ public class PlayerMovement : MonoBehaviour
     private bool _isFacingRight = true;
     private Animator _animator;
     private ParticleSystem _landingImpactVFX;
-    private bool _endedGrouned;
+    private ParticleSystem _tentacleHitImpactVFX;
+    private bool _endedGrounded;
 
     public event EventHandler OnPlayerDead = delegate { };
     public event EventHandler OnPlayerEscaped = delegate { };
@@ -36,17 +37,18 @@ public class PlayerMovement : MonoBehaviour
         _spriteRenderer = GetComponent<SpriteRenderer>();
         _animator = GetComponent<Animator>();
 
-        _landingImpactVFX = Resources.Load<ParticleSystem>("Prefabs/Hit Impact");
+        _landingImpactVFX = Resources.Load<ParticleSystem>("Prefabs/LandingImpact");
+        _tentacleHitImpactVFX = Resources.Load<ParticleSystem>("Prefabs/HitImpact");
     }
 
     public void FixedUpdate()
     {
         _animator.SetBool("IsFloating", !IsGrounded);
         
-        if (!_endedGrouned && IsGrounded)
+        if (!_endedGrounded && IsGrounded)
             SpawnLandingVFX();
 
-        _endedGrouned = IsGrounded;
+        _endedGrounded = IsGrounded;
 
         if (!IsGrounded)
             return;
@@ -54,16 +56,13 @@ public class PlayerMovement : MonoBehaviour
         MoveHorizontally();
     }
 
-    private void SpawnLandingVFX()
-    {
-        StartCoroutine(SpawnAndDestroyParticles());
+    private void SpawnLandingVFX() => StartCoroutine(SpawnAndDestroyParticles(_landingImpactVFX));
 
-        IEnumerator SpawnAndDestroyParticles()
-        {
-            var instance = Instantiate(_landingImpactVFX, SpriteBottom, Quaternion.identity);
-            yield return new WaitForSeconds(1f);
-            Destroy(instance.gameObject);
-        }
+    private IEnumerator SpawnAndDestroyParticles(ParticleSystem system)
+    {
+        var instance = Instantiate(system, SpriteBottom, Quaternion.identity);
+        yield return new WaitForSeconds(1f);
+        Destroy(instance.gameObject);
     }
 
     private void MoveHorizontally()

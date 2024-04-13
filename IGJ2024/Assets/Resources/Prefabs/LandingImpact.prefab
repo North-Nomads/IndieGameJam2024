@@ -43,7 +43,7 @@ GameObject:
   - component: {fileID: 5938437733057663644}
   - component: {fileID: 3517855443986922339}
   m_Layer: 0
-  m_Name: Hit Impact
+  m_Name: LandingImpact
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
