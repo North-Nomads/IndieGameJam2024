@@ -3,17 +3,24 @@ using Cinemachine;
 
 public class LevelLoader : MonoBehaviour
 {
+    [SerializeField] private bool isTutorial = false;
+    [SerializeField] private int tutorialIndex;
     private PlayerMovement _player;
     private RectTransform _deathPanel;
     private LevelObserver _levelObserver;
     private RectTransform _levelFinishPanel;
+    private LevelTutorial _levelTutorial;
 
     private void Start()
     {
         SpawnPlayer();
         SpawnPlayerUI();
         SetUpPlayerCamera();
-        _levelObserver = new LevelObserver(_deathPanel, _levelFinishPanel, _player);
+        _levelObserver = new LevelObserver(_deathPanel, _levelFinishPanel, _player.GetComponent<PlayerHealth>());
+
+        if (isTutorial)
+            _levelTutorial = new(tutorialIndex);
+
     }
 
     private void SetUpPlayerCamera()

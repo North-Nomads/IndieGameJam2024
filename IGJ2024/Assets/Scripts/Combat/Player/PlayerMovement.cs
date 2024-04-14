@@ -1,13 +1,9 @@
 using System;
-using System.Collections;
 using UnityEngine;
 
-[RequireComponent(typeof(Rigidbody2D), typeof(SpriteRenderer))]
+[RequireComponent(typeof(Rigidbody2D), typeof(SpriteRenderer), typeof(PlayerHealth))]
 public class PlayerMovement : MonoBehaviour
 {
-    private const string DeathZoneTag = "Death";
-    private const string EscapeTag = "Escape";
-
     [SerializeField, Min(0)] private float moveSpeed = 1f;
     [SerializeField] private LayerMask groundLayer;
     [SerializeField] private float dashSpeed;
@@ -24,19 +20,28 @@ public class PlayerMovement : MonoBehaviour
     private float _horizontalInput;
     private bool _endedGrounded;
 
-    public event EventHandler OnPlayerDead = delegate { };
-    public event EventHandler OnPlayerEscaped = delegate { };
+    private bool _levelPaused;
+
     public event EventHandler OnPlayerLanded = delegate { };
+
 
     protected Vector3 SpriteBottom => transform.position - new Vector3(0, _spriteRenderer.bounds.size.y / 2, 0);
     private bool IsGrounded => Physics2D.OverlapBox(SpriteBottom, feetBox, 0, groundLayer);
 
     private void Start()
     {
+        _levelPaused = false;
         _rigidbody = GetComponent<Rigidbody2D>();
         _spriteRenderer = GetComponent<SpriteRenderer>();
         _animator = GetComponent<Animator>();
         _playerVFX = GetComponent<PlayerVFX>();
+        GetComponent<PlayerHealth>().OnPlayerDead += HandleLevelPaused;
+        GetComponent<PlayerHealth>().OnPlayerEscaped += HandleLevelPaused;
+    }
+
+    private void HandleLevelPaused(object sender, EventArgs e)
+    {
+        _levelPaused = true;
     }
 
     public void FixedUpdate()
@@ -51,7 +56,7 @@ public class PlayerMovement : MonoBehaviour
 
         _endedGrounded = IsGrounded;
 
-        if (!IsGrounded)
+        if (!IsGrounded || _levelPaused)
             return;
 
         MoveHorizontally();
@@ -68,15 +73,6 @@ public class PlayerMovement : MonoBehaviour
             Flip();
         else
             _animator.SetBool("IsMoving", false);
-    }
-
-    private void OnTriggerEnter2D(Collider2D collision)
-    {
-        if (collision.CompareTag(DeathZoneTag))
-            OnPlayerDead(this, null);
-
-        else if (collision.CompareTag(EscapeTag))
-            OnPlayerEscaped(this, null);
     }
 
     private void Flip()

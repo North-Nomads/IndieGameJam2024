@@ -9,7 +9,7 @@ public class LevelObserver
     private readonly RectTransform _deathPanel;
     private readonly RectTransform _levelFinishedPanel;
 
-    public LevelObserver(RectTransform deathPanel, RectTransform levelFinishedPanel, PlayerMovement _player)
+    public LevelObserver(RectTransform deathPanel, RectTransform levelFinishedPanel, PlayerHealth _player)
     {
         _deathPanel = deathPanel;
         _levelFinishedPanel = levelFinishedPanel;
