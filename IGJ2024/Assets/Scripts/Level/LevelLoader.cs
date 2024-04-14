@@ -5,11 +5,13 @@ public class LevelLoader : MonoBehaviour
 {
     [SerializeField] private bool isTutorial = false;
     [SerializeField] private int tutorialIndex;
-    private PlayerMovement _player;
-    private RectTransform _deathPanel;
+    
     private LevelObserver _levelObserver;
-    private RectTransform _levelFinishPanel;
     private LevelTutorial _levelTutorial;
+    private PlayerMovement _player;
+    
+    private LevelCanvas _deathPanel;
+    private LevelCanvas _levelFinishPanel;
     private LevelTimer _clockInstante;
 
     private void Start()
@@ -37,8 +39,8 @@ public class LevelLoader : MonoBehaviour
 
     private void SpawnPlayerUI()
     {
-        var deathPanel = Resources.Load<RectTransform>("Prefabs/Player/DeathPanel");
-        var levelFinishPanel = Resources.Load<RectTransform>("Prefabs/Player/LevelFinishPanel");
+        var deathPanel = Resources.Load<LevelCanvas>("Prefabs/Player/DeathPanel");
+        var levelFinishPanel = Resources.Load<LevelCanvas>("Prefabs/Player/LevelFinishPanel");
         
         var canvas = FindObjectOfType<Canvas>();
         _deathPanel = Instantiate(deathPanel, canvas.transform);

@@ -9,6 +9,8 @@ public class LevelTimer : MonoBehaviour
     private bool _isTimerRunning = false;
     private float _startTime;
 
+    public string TimeText => timerText.text;
+
     private void Start()
     {
         if (timerText == null)

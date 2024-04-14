@@ -1,20 +1,22 @@
-﻿using System;
+﻿using UnityEngine.SceneManagement;
 using UnityEngine;
+using System;
+using System.Text.RegularExpressions;
 
 /// <summary>
 /// Observer is responsible for handling player actions
 /// </summary>
 public class LevelObserver
 {
-    private readonly RectTransform _deathPanel;
-    private readonly RectTransform _levelFinishedPanel;
+    private readonly LevelCanvas _deathPanel;
+    private readonly LevelCanvas _levelFinishedPanel;
     private readonly LevelTimer _timer;
 
 
     public static event EventHandler OnLevelPaused = delegate { };
     public static bool IsLevelPaused { get; private set; }
 
-    public LevelObserver(RectTransform deathPanel, RectTransform levelFinishedPanel, PlayerHealth _player, LevelTimer timer)
+    public LevelObserver(LevelCanvas deathPanel, LevelCanvas levelFinishedPanel, PlayerHealth _player, LevelTimer timer)
     {
         _deathPanel = deathPanel;
         _levelFinishedPanel = levelFinishedPanel;
@@ -30,14 +32,29 @@ public class LevelObserver
     private void HandleLevelFinished(object sender, EventArgs e)
     {
         IsLevelPaused = true;
-        _levelFinishedPanel.gameObject.SetActive(true);
+        _levelFinishedPanel.ShowCanvas(GenerateTitle(), _timer.TimeText);
         _timer.StopTimer();
     }
 
     private void HandlePlayerDeath(object sender, EventArgs e)
     {
         IsLevelPaused = true;
-        _deathPanel.gameObject.SetActive(true);
+        _deathPanel.ShowCanvas(GenerateTitle(), _timer.TimeText);
         _timer.StopTimer();
+    }
+
+    private string GenerateTitle()
+    {
+        var sceneName = SceneManager.GetActiveScene().name;
+
+        string regexPattern = @"Level(\d+)";
+        Match match = Regex.Match(sceneName, regexPattern);
+
+        if (match.Success)
+            return "Уровень " + match.Groups[1].Value;
+        else
+            return sceneName;
+        
+
     }
 }

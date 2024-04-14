@@ -1,8 +1,19 @@
-﻿using UnityEngine;
+﻿using TMPro;
+using UnityEngine;
 using UnityEngine.SceneManagement;
 
 public class LevelCanvas : MonoBehaviour
 {
+    [SerializeField] private TextMeshProUGUI titleText;
+    [SerializeField] private TextMeshProUGUI speedText;
+
+    public void ShowCanvas(string title, string time)
+    {
+        gameObject.SetActive(true);
+        speedText.text = time;
+        titleText.text = title;
+    }
+
     public void RestartLevel()
     {
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
