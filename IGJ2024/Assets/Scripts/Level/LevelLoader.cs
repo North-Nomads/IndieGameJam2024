@@ -10,17 +10,17 @@ public class LevelLoader : MonoBehaviour
     private LevelObserver _levelObserver;
     private RectTransform _levelFinishPanel;
     private LevelTutorial _levelTutorial;
+    private LevelTimer _clockInstante;
 
     private void Start()
     {
         SpawnPlayer();
         SpawnPlayerUI();
         SetUpPlayerCamera();
-        _levelObserver = new LevelObserver(_deathPanel, _levelFinishPanel, _player.GetComponent<PlayerHealth>());
+        _levelObserver = new LevelObserver(_deathPanel, _levelFinishPanel, _player.GetComponent<PlayerHealth>(), _clockInstante);
 
         if (isTutorial)
             _levelTutorial = new(tutorialIndex);
-
     }
 
     private void SetUpPlayerCamera()
@@ -43,6 +43,11 @@ public class LevelLoader : MonoBehaviour
         var canvas = FindObjectOfType<Canvas>();
         _deathPanel = Instantiate(deathPanel, canvas.transform);
         _levelFinishPanel = Instantiate(levelFinishPanel, canvas.transform);
+
+        var clockPanel = Resources.Load<LevelTimer>("Prefabs/Player/Clock");
+        _clockInstante = Instantiate(clockPanel, canvas.transform);
+        _clockInstante.StartTimer();
+
     }
 
 

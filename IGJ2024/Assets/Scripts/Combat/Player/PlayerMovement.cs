@@ -19,7 +19,6 @@ public class PlayerMovement : MonoBehaviour
     private bool _isFacingRight = true;
     private float _horizontalInput;
     private bool _endedGrounded;
-    private bool _levelPaused;
 
     public event EventHandler OnPlayerLanded = delegate { };
 
@@ -27,17 +26,19 @@ public class PlayerMovement : MonoBehaviour
 
     private void Start()
     {
-        _levelPaused = false;
         _rigidbody = GetComponent<Rigidbody2D>();
         _animator = GetComponent<Animator>();
         _playerVFX = GetComponent<PlayerVFX>();
-        GetComponent<PlayerHealth>().OnPlayerDead += HandleLevelPaused;
-        GetComponent<PlayerHealth>().OnPlayerEscaped += HandleLevelPaused;
+
+        LevelObserver.OnLevelPaused += HandleLevelPause;
     }
 
-    private void HandleLevelPaused(object sender, EventArgs e)
+    private void HandleLevelPause(object sender, EventArgs e)
     {
-        _levelPaused = true;
+        _animator.SetBool("IsFloating", false);
+        _animator.SetBool("IsMoving", false);
+        _horizontalInput = 0f;
+        _rigidbody.velocity = Vector2.zero;
     }
 
     public void FixedUpdate()
@@ -52,7 +53,7 @@ public class PlayerMovement : MonoBehaviour
 
         _endedGrounded = IsGrounded;
 
-        if (!IsGrounded || _levelPaused)
+        if (!IsGrounded || LevelObserver.IsLevelPaused)
             return;
 
         MoveHorizontally();

@@ -36,7 +36,6 @@ public class PlayerTentacle : MonoBehaviour
     private float _currentSpeed;
     private float _windSpeed;
 
-    private bool _levelPaused;
     private bool HasReachedHookTarget => Vector2.Distance(_hookTarget, _hookOrigin) < 1f;
 
 
@@ -51,13 +50,15 @@ public class PlayerTentacle : MonoBehaviour
         _playerMovement.OnPlayerLanded += HandlePlayerLanding;
 
         _windSpeed = hookSpeed.Evaluate(1) * .05f * Time.fixedDeltaTime;
-        GetComponent<PlayerHealth>().OnPlayerDead += HandleLevelPaused;
-        GetComponent<PlayerHealth>().OnPlayerEscaped += HandleLevelPaused;
+
+        LevelObserver.OnLevelPaused += HandleLevelPause;
     }
 
-    private void HandleLevelPaused(object sender, EventArgs e)
+    private void HandleLevelPause(object sender, EventArgs e)
     {
-        _levelPaused = true;
+        _animator.SetBool("IsHooking", false);
+        _currentSpeed = 0f;
+        _isHooking = false;
     }
 
     private void HandlePlayerLanding(object sender, EventArgs e)
@@ -67,7 +68,7 @@ public class PlayerTentacle : MonoBehaviour
 
     private void Update()
     {
-        if (_levelPaused)
+        if (LevelObserver.IsLevelPaused)
         {
             _animator.SetBool("IsHooking", false);
             ReleaseTentacle();
@@ -163,7 +164,6 @@ public class PlayerTentacle : MonoBehaviour
 
     private void RideHook()
     {
-        print(EvaluateSpeed());
         _currentSpeed = EvaluateSpeed();
 
         Vector2 hookDirection = (_hookTarget - _hookOrigin).normalized;
