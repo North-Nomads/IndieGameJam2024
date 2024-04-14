@@ -26,6 +26,7 @@ public class PlayerMovement : MonoBehaviour
 
     private void Start()
     {
+        print("Start");
         _rigidbody = GetComponent<Rigidbody2D>();
         _animator = GetComponent<Animator>();
         _playerVFX = GetComponent<PlayerVFX>();
@@ -43,6 +44,9 @@ public class PlayerMovement : MonoBehaviour
 
     public void FixedUpdate()
     {
+        if (LevelObserver.IsLevelPaused)
+            return;
+
         _animator.SetBool("IsFloating", !IsGrounded);
         
         if (!_endedGrounded && IsGrounded)
@@ -53,7 +57,7 @@ public class PlayerMovement : MonoBehaviour
 
         _endedGrounded = IsGrounded;
 
-        if (!IsGrounded || LevelObserver.IsLevelPaused)
+        if (!IsGrounded)
             return;
 
         MoveHorizontally();

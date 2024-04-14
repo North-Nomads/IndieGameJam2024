@@ -69,11 +69,7 @@ public class PlayerTentacle : MonoBehaviour
     private void Update()
     {
         if (LevelObserver.IsLevelPaused)
-        {
-            _animator.SetBool("IsHooking", false);
-            ReleaseTentacle();
             return;
-        }    
 
         _animator.SetBool("IsHooking", _isHooking);
         _hookOrigin = new (hookPivot.position.x, hookPivot.position.y);
@@ -158,6 +154,9 @@ public class PlayerTentacle : MonoBehaviour
 
     private void FixedUpdate()
     {
+        if (LevelObserver.IsLevelPaused)
+            return;
+
         if (_isHooking)
             RideHook();
     }
