@@ -11,28 +11,24 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private float jumpStrength;
     [SerializeField] private float fallMultiplier;
     [SerializeField] private Vector2 feetBox;
+    [SerializeField] private Transform feetPosition;
 
-    private SpriteRenderer _spriteRenderer;
     private Rigidbody2D _rigidbody;
     private PlayerVFX _playerVFX;
     private Animator _animator;
     private bool _isFacingRight = true;
     private float _horizontalInput;
     private bool _endedGrounded;
-
     private bool _levelPaused;
 
     public event EventHandler OnPlayerLanded = delegate { };
 
-
-    protected Vector3 SpriteBottom => transform.position - new Vector3(0, _spriteRenderer.bounds.size.y / 2, 0);
-    private bool IsGrounded => Physics2D.OverlapBox(SpriteBottom, feetBox, 0, groundLayer);
+    private bool IsGrounded => Physics2D.OverlapBox(feetPosition.position, feetBox, 0, groundLayer);
 
     private void Start()
     {
         _levelPaused = false;
         _rigidbody = GetComponent<Rigidbody2D>();
-        _spriteRenderer = GetComponent<SpriteRenderer>();
         _animator = GetComponent<Animator>();
         _playerVFX = GetComponent<PlayerVFX>();
         GetComponent<PlayerHealth>().OnPlayerDead += HandleLevelPaused;
@@ -51,7 +47,7 @@ public class PlayerMovement : MonoBehaviour
         if (!_endedGrounded && IsGrounded)
         {
             OnPlayerLanded(this, null);
-            _playerVFX.SpawnLandingVFX(SpriteBottom);
+            _playerVFX.SpawnLandingVFX(feetPosition.position);
         }
 
         _endedGrounded = IsGrounded;
