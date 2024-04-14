@@ -102,7 +102,7 @@ public class PlayerTentacle : MonoBehaviour
     private void LaunchTentacle()
     {
         Vector2 mousePosition = _mainCamera.ScreenToWorldPoint(Input.mousePosition);
-        RaycastHit2D hit = Physics2D.Raycast(_hookOrigin, mousePosition - _rigidbody.position, hookRange, possibleHookTargets.value);
+        RaycastHit2D hit = Physics2D.Raycast(_hookOrigin, mousePosition - _hookOrigin, hookRange, possibleHookTargets.value);
 
         _playerMovement.TurnTowards(mousePosition.x > _hookOrigin.x);
 
