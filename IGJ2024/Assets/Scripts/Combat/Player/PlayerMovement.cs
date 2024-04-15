@@ -36,7 +36,7 @@ public class PlayerMovement : MonoBehaviour
 
     private void HandleLevelPause(object sender, EventArgs e)
     {
-        _animator.SetBool("IsFloating", false);
+        _animator.SetBool("IsGrounded", true);
         _animator.SetBool("IsMoving", false);
         _horizontalInput = 0f;
         _rigidbody.velocity = Vector2.zero;
@@ -47,7 +47,7 @@ public class PlayerMovement : MonoBehaviour
         if (LevelObserver.IsLevelPaused)
             return;
 
-        _animator.SetBool("IsFloating", !IsGrounded);
+        _animator.SetBool("IsGrounded", IsGrounded);
         
         if (!_endedGrounded && IsGrounded)
         {
@@ -61,17 +61,26 @@ public class PlayerMovement : MonoBehaviour
             return;
 
         MoveHorizontally();
+        
     }
 
-    
+    private void Update()
+    {
+        _animator.SetFloat("VerticalSpeed", _rigidbody.velocity.y);
+    }
+
+
 
     private void MoveHorizontally()
     {
         _horizontalInput = Input.GetAxis("Horizontal");
         _rigidbody.velocity = new Vector2(_horizontalInput * moveSpeed, _rigidbody.velocity.y);
-        _animator.SetBool("IsMoving", true);
+        
         if (_horizontalInput != 0)
+        {
             Flip();
+            _animator.SetBool("IsMoving", true);
+        }
         else
             _animator.SetBool("IsMoving", false);
     }

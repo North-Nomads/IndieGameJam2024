@@ -71,14 +71,20 @@ public class PlayerTentacle : MonoBehaviour
         if (LevelObserver.IsLevelPaused)
             return;
 
-        _animator.SetBool("IsHooking", _isHooking);
+        
         _hookOrigin = new (hookPivot.position.x, hookPivot.position.y);
 
         if (Input.GetMouseButtonDown(0))
+        {
             LaunchTentacle();
+            _animator.SetBool("IsHooking", true);
+        }
 
         if (Input.GetMouseButtonUp(0))
+        {
             ReleaseTentacle();
+            _animator.SetBool("IsHooking", false);
+        }
     }
 
     private void ReleaseTentacle()
