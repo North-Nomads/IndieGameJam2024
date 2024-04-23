@@ -1,68 +1,113 @@
+using System;
 using UnityEngine;
 
-[RequireComponent(typeof(Rigidbody2D), typeof(PlayerCombat), typeof(SpriteRenderer))]
+[RequireComponent(typeof(Rigidbody2D), typeof(SpriteRenderer), typeof(PlayerHealth))]
 public class PlayerMovement : MonoBehaviour
 {
-    private const float GroundCheckRadius = .5f;
-    private const int GroundLayer = 1 << 6;
-
     [SerializeField, Min(0)] private float moveSpeed = 1f;
-    
+    [SerializeField] private LayerMask groundLayer;
     [SerializeField] private float dashSpeed;
     [SerializeField] private float dashDuration;
     [SerializeField] private float jumpStrength;
-
-    private float _dashTimeLeft;
-    private bool IsDashing => _dashTimeLeft > 0;
+    [SerializeField] private float fallMultiplier;
+    [SerializeField] private Vector2 feetBox;
+    [SerializeField] private Transform feetPosition;
 
     private Rigidbody2D _rigidbody;
-    private PlayerCombat _playerCombat;
+    private PlayerVFX _playerVFX;
+    private Animator _animator;
+    private bool _isFacingRight = true;
     private float _horizontalInput;
-    private SpriteRenderer _spriteRenderer;
+    private bool _endedGrounded;
 
-    protected Vector3 SpriteBottom => transform.position - new Vector3(0, _spriteRenderer.bounds.size.y / 2, 0);
-    private bool IsGrounded => Physics2D.OverlapCircle(SpriteBottom, GroundCheckRadius, GroundLayer);
+    public event EventHandler OnPlayerLanded = delegate { };
+
+    private bool IsGrounded => Physics2D.OverlapBox(feetPosition.position, feetBox, 0, groundLayer);
 
     private void Start()
     {
+        print("Start");
         _rigidbody = GetComponent<Rigidbody2D>();
-        _playerCombat = GetComponent<PlayerCombat>();
-        _spriteRenderer = GetComponent<SpriteRenderer>();
+        _animator = GetComponent<Animator>();
+        _playerVFX = GetComponent<PlayerVFX>();
+
+        LevelObserver.OnLevelPaused += HandleLevelPause;
+    }
+
+    private void HandleLevelPause(object sender, EventArgs e)
+    {
+        _animator.SetBool("IsGrounded", true);
+        _animator.SetBool("IsMoving", false);
+        _horizontalInput = 0f;
+        _rigidbody.velocity = Vector2.zero;
     }
 
     public void FixedUpdate()
     {
-        if (_playerCombat.IsDead)
+        if (LevelObserver.IsLevelPaused)
             return;
 
-        if (IsDashing)
+        _animator.SetBool("IsGrounded", IsGrounded);
+        
+        if (!_endedGrounded && IsGrounded)
         {
-            _rigidbody.position += _horizontalInput * dashSpeed * Time.fixedDeltaTime * Vector2.right;
-            _dashTimeLeft -= Time.fixedDeltaTime;
+            OnPlayerLanded(this, null);
+            _playerVFX.SpawnLandingVFX(feetPosition.position);
         }
-        else
-        {
-            _horizontalInput = Input.GetAxis("Horizontal");
-            _rigidbody.position += _horizontalInput * moveSpeed * Time.fixedDeltaTime * Vector2.right;
-        }
+
+        _endedGrounded = IsGrounded;
+
+        if (!IsGrounded)
+            return;
+
+        MoveHorizontally();
+        
     }
 
     private void Update()
     {
-        if (_playerCombat.IsDead)
-            return;
-
-        if (Input.GetKeyDown(KeyCode.LeftShift))
-            PerformDash();
-
-        if (Input.GetKeyDown(KeyCode.Space) && IsGrounded)
-            PerformJump();
+        _animator.SetFloat("VerticalSpeed", _rigidbody.velocity.y);
     }
 
-    private void PerformJump()
+
+
+    private void MoveHorizontally()
     {
-        _rigidbody.velocity = new Vector2(_rigidbody.velocity.x, jumpStrength);
+        _horizontalInput = Input.GetAxis("Horizontal");
+        _rigidbody.velocity = new Vector2(_horizontalInput * moveSpeed, _rigidbody.velocity.y);
+        
+        if (_horizontalInput != 0)
+        {
+            Flip();
+            _animator.SetBool("IsMoving", true);
+        }
+        else
+            _animator.SetBool("IsMoving", false);
     }
 
-    private void PerformDash() => _dashTimeLeft = dashDuration;
+    private void Flip()
+    {
+        if (_isFacingRight && _horizontalInput < 0f || !_isFacingRight && _horizontalInput > 0f)
+        {
+            var yValue = _isFacingRight ? 180f : 0f;
+            _isFacingRight = !_isFacingRight;
+            Vector3 rotator = new(transform.rotation.x, yValue, transform.rotation.z);
+            transform.rotation = Quaternion.Euler(rotator);
+        }
+    }
+
+    public void TurnTowards(bool towardsLeft)
+    {
+        _isFacingRight = !_isFacingRight;
+        if (towardsLeft)
+        {
+            Vector3 rotator = new(transform.rotation.x, 0f, transform.rotation.z);
+            transform.rotation = Quaternion.Euler(rotator);
+        }
+        else
+        {
+            Vector3 rotator = new(transform.rotation.x, 180f, transform.rotation.z);
+            transform.rotation = Quaternion.Euler(rotator);
+        }
+    }
 }

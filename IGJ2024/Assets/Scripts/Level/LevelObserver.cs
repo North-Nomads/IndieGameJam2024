@@ -1,37 +1,84 @@
-﻿using System;
+﻿using UnityEngine.SceneManagement;
 using UnityEngine;
-using UnityEngine.SceneManagement;
+using System;
+using System.Text.RegularExpressions;
+using System.Collections;
 
 /// <summary>
 /// Observer is responsible for handling player actions
 /// </summary>
 public class LevelObserver
 {
-    private readonly MobSpawner _mobSpawner;
-    private readonly RectTransform _deathPanel;
+    private readonly LevelCanvas _deathPanel;
+    private readonly LevelCanvas _levelFinishedPanel;
+    private readonly PlayerHealth _player;
+    private readonly LevelTimer _timer;
+    private static bool _isLevelPaused;
 
-    public LevelObserver(MobSpawner mobSpawner, RectTransform deathPanel, PlayerCombat _player)
+    public static event EventHandler OnLevelPaused = delegate { };
+    public static bool IsLevelPaused
     {
-        _mobSpawner = mobSpawner;
-        _mobSpawner.OnLevelCleared += HandleLevelClearance;
-        _deathPanel = deathPanel;
-        deathPanel.gameObject.SetActive(false);
-
-        _player.OnPlayerDead += HandlePlayerDeath;
+        get => _isLevelPaused;
+        private set
+        {
+            _isLevelPaused = value;
+            if (value)
+                OnLevelPaused(null, null);
+        }
     }
 
-    private void HandleLevelClearance(object sender, EventArgs e)
-    { 
-        Debug.Log("Level cleared");
-        int nextSceneIndex = SceneManager.GetActiveScene().buildIndex + 1;
-        if (SceneManager.sceneCountInBuildSettings == nextSceneIndex)
-            SceneManager.LoadScene(0);
-        else
-            SceneManager.LoadScene(nextSceneIndex);
+
+    public LevelObserver(LevelCanvas deathPanel, LevelCanvas levelFinishedPanel, PlayerHealth player, LevelTimer timer)
+    {
+        foreach (var sub in OnLevelPaused.GetInvocationList())
+            OnLevelPaused -= sub as EventHandler;
+
+        _deathPanel = deathPanel;
+        _levelFinishedPanel = levelFinishedPanel;
+        _player = player;
+        _timer = timer;
+
+        deathPanel.gameObject.SetActive(false);
+        levelFinishedPanel.gameObject.SetActive(false);
+
+        _player.OnPlayerDead += HandlePlayerDeath;
+        _player.OnPlayerEscaped += HandleLevelFinished;
+        IsLevelPaused = false;
+    }
+
+    private void HandleLevelFinished(object sender, EventArgs e)
+    {
+        IsLevelPaused = true;
+        _levelFinishedPanel.ShowCanvas(GenerateTitle(), _timer.TimeText);
+        _timer.StopTimer();
+        HidePlayer();
     }
 
     private void HandlePlayerDeath(object sender, EventArgs e)
     {
-        _deathPanel.gameObject.SetActive(true);
+        IsLevelPaused = true;
+        _deathPanel.ShowCanvas(GenerateTitle(), _timer.TimeText);
+        _timer.StopTimer();
+        HidePlayer();
+    }
+
+    private void HidePlayer()
+    {
+        _player.PlayFadeAnimation();
+    }
+
+    private string GenerateTitle()
+    {
+        var sceneName = SceneManager.GetActiveScene().name;
+
+        string regexPattern = @"Level(\d+)";
+        Match match = Regex.Match(sceneName, regexPattern);
+
+        if (match.Success)
+            return "Уровень " + match.Groups[1].Value;
+        else
+            return sceneName;
+        
+
     }
 }
