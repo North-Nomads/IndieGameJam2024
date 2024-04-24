@@ -1,13 +1,12 @@
 ﻿using System;
 using System.Collections;
-using System.Runtime.CompilerServices;
-using Unity.Burst.CompilerServices;
 using UnityEngine;
 
 [RequireComponent(typeof(PlayerVFX))]
 public class PlayerTentacle : MonoBehaviour
 {
     public const float MaxSpeed = 16f;
+    private const float TentacleSensitiveRadius = .5f;
 
     [Header("General")]
     [SerializeField] private float hookRange;
@@ -30,7 +29,8 @@ public class PlayerTentacle : MonoBehaviour
     private Vector2 _hookTarget;
     private bool _isHooking;
     private float _currentSpeed;
-    
+    private Coroutine _currentTentacleAnimationCoroutine;
+
     private Vector2 HookOrigin => new (hookPivot.position.x, hookPivot.position.y);
 
     private void Start()
@@ -74,9 +74,13 @@ public class PlayerTentacle : MonoBehaviour
 
     private void LaunchTentacle()
     {
+        if (_currentTentacleAnimationCoroutine is not null)
+            StopCoroutine(_currentTentacleAnimationCoroutine);
+
         // Turn towards the hook 
         Vector2 mousePosition = _mainCamera.ScreenToWorldPoint(Input.mousePosition);
         _playerMovement.TurnTowards(mousePosition.x > HookOrigin.x);
+        EnableHook();
 
         // Play launch animation
         // Suck into hookable object
@@ -86,7 +90,7 @@ public class PlayerTentacle : MonoBehaviour
 
     private void HandleTentacleLaunchAnimatiomTowards(Vector2 mousePosition)
     {
-        StartCoroutine(PlayTentacleLaunchAnimation());
+        _currentTentacleAnimationCoroutine = StartCoroutine(PlayTentacleLaunchAnimation());
         
         IEnumerator PlayTentacleLaunchAnimation()
         {
@@ -99,13 +103,16 @@ public class PlayerTentacle : MonoBehaviour
 
             while (previousDistance > .1f && isGettingCloser)
             {
-                currentPoint -= direction * hookSpeed;
+                currentPoint += direction * hookSpeed;
                 isGettingCloser = Vector2.Distance(currentPoint, maxTentacleDistance) < previousDistance;
                 previousDistance = Vector2.Distance(currentPoint, maxTentacleDistance);
                 UpdateHookLine(currentPoint);
 
                 if (IsTentacleTipSucked(currentPoint))
+                {
                     HandleTentacleSuccessfullySuckedInto(currentPoint);
+                    yield break;
+                }
 
                 yield return null;
             }
@@ -120,14 +127,16 @@ public class PlayerTentacle : MonoBehaviour
         _playerVFX.AnimateCameraZoom(true);
         _animator.SetBool("IsHooking", true);
         _hookTarget = targetPoint;
+        _isHooking = true;
     }
 
-    private bool IsTentacleTipSucked(Vector2 tentacleTipPoint) => Physics2D.OverlapCircle(tentacleTipPoint, .1f, hookSurface.value);
+    private bool IsTentacleTipSucked(Vector2 tentacleTipPoint) => Physics2D.OverlapCircle(tentacleTipPoint, TentacleSensitiveRadius, hookSurface.value);
 
     private void HideTentacle()
     {
         if (_launchingTentacleProcess is not null)
             StopCoroutine(_launchingTentacleProcess);
+        ClearHookLine();
 
         // If was hooking - zoom out. Otherwise - don't 
         if (_isHooking)
@@ -135,7 +144,6 @@ public class PlayerTentacle : MonoBehaviour
 
         // Reset variables for the next launch
         _isHooking = false;
-        ClearHookLine();
     }
 
     private void FixedUpdate()

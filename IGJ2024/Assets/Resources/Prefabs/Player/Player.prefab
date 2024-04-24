@@ -183,7 +183,7 @@ MonoBehaviour:
     m_Bits: 320
   hookPivot: {fileID: 4296181674843001915}
   playerRidingHookSpeed: 8
-  hookSpeed: 0
+  hookSpeed: 1
 --- !u!50 &2288370284125223207
 Rigidbody2D:
   serializedVersion: 4
