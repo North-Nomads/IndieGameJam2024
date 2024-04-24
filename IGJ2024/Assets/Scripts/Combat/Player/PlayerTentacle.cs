@@ -22,7 +22,7 @@ public class PlayerTentacle : MonoBehaviour
     private PlayerVFX _playerVFX;
     private Animator _animator;
     private Camera _mainCamera;
-    private LineRenderer _line;
+    private LineRenderer _hookLineRender;
     
     // Fields
     private Coroutine _launchingTentacleProcess;
@@ -32,27 +32,21 @@ public class PlayerTentacle : MonoBehaviour
     private Coroutine _currentTentacleAnimationCoroutine;
 
     private Vector2 HookOrigin => new (hookPivot.position.x, hookPivot.position.y);
+    private void UpdateHookLine(Vector2 endpoint) => _hookLineRender.SetPositions(new Vector3[] { HookOrigin, endpoint });
+    private void HandlePlayerLanding(object sender, EventArgs e) => _currentSpeed = 0f;
+    private bool IsTentacleTipSucked(Vector2 tentacleTipPoint) => Physics2D.OverlapCircle(tentacleTipPoint, TentacleSensitiveRadius, hookSurface.value);
 
     private void Start()
     {
         _mainCamera = Camera.main;
-        _line = GetComponent<LineRenderer>();
+        _hookLineRender = GetComponent<LineRenderer>();
         _rigidbody = GetComponent<Rigidbody2D>();
         _playerVFX = GetComponent<PlayerVFX>();
         _animator = GetComponent<Animator>();
         _playerMovement = GetComponent<PlayerMovement>();
         _playerMovement.OnPlayerLanded += HandlePlayerLanding;
         LevelObserver.OnLevelPaused += HandleLevelPause;
-    }
-
-    private void HandleLevelPause(object sender, EventArgs e)
-    {
-        _animator.SetBool("IsHooking", false);
-        _currentSpeed = 0f;
-        _isHooking = false;
-    }
-
-    private void HandlePlayerLanding(object sender, EventArgs e) => _currentSpeed = 0f;
+    }    
 
     private void Update()
     {
@@ -64,6 +58,22 @@ public class PlayerTentacle : MonoBehaviour
 
         if (Input.GetMouseButtonUp(0))
             ReleaseTentacle();
+    }
+
+    private void FixedUpdate()
+    {
+        if (LevelObserver.IsLevelPaused)
+            return;
+
+        if (_isHooking)
+            RideHook();
+    }
+
+    private void HandleLevelPause(object sender, EventArgs e)
+    {
+        _animator.SetBool("IsHooking", false);
+        _currentSpeed = 0f;
+        _isHooking = false;
     }
 
     private void ReleaseTentacle()
@@ -80,11 +90,9 @@ public class PlayerTentacle : MonoBehaviour
         // Turn towards the hook 
         Vector2 mousePosition = _mainCamera.ScreenToWorldPoint(Input.mousePosition);
         _playerMovement.TurnTowards(mousePosition.x > HookOrigin.x);
-        EnableHook();
+        _hookLineRender.enabled = true;
 
-        // Play launch animation
-        // Suck into hookable object
-        // Start moving towards the object
+        // Play launch animation and suck into hookable object
         HandleTentacleLaunchAnimatiomTowards(mousePosition);
     }
 
@@ -130,13 +138,11 @@ public class PlayerTentacle : MonoBehaviour
         _isHooking = true;
     }
 
-    private bool IsTentacleTipSucked(Vector2 tentacleTipPoint) => Physics2D.OverlapCircle(tentacleTipPoint, TentacleSensitiveRadius, hookSurface.value);
-
     private void HideTentacle()
     {
         if (_launchingTentacleProcess is not null)
             StopCoroutine(_launchingTentacleProcess);
-        ClearHookLine();
+        _hookLineRender.enabled = false;
 
         // If was hooking - zoom out. Otherwise - don't 
         if (_isHooking)
@@ -146,27 +152,11 @@ public class PlayerTentacle : MonoBehaviour
         _isHooking = false;
     }
 
-    private void FixedUpdate()
-    {
-        if (LevelObserver.IsLevelPaused)
-            return;
-
-        if (_isHooking)
-            RideHook();
-    }
-
     private void RideHook()
     {
         _currentSpeed = playerRidingHookSpeed;
-
         Vector2 hookDirection = (_hookTarget - HookOrigin).normalized;
         _rigidbody.velocity = hookDirection * _currentSpeed;
         UpdateHookLine(_hookTarget);
     }
-
-    private void UpdateHookLine(Vector2 endpoint) => _line.SetPositions(new Vector3[] { HookOrigin, endpoint });
-
-    private void EnableHook() => _line.enabled = true;
-
-    private void ClearHookLine() => _line.enabled = false;
 }
